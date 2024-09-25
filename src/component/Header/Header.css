@@ -26,13 +26,13 @@
     height: 12px;
     padding: 10px;
     border: none;
-    width: 15%;
+    width: 20%;
   }
   
   .header__searchIcon {
     padding: 5px;
     height: 22px !important;
-    background-color: #cd9042;
+    background-color: #9b9b9b;
   }
   
   .header__optionLineOne {
