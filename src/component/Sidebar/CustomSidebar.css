@@ -1,0 +1,32 @@
+/* CustomSidebar.css */
+.sidebar {
+    background-color: #c5c5c5; /* 배경색 변경 */
+    width: 10px; /* Custom width */
+    height: 100vh; /* Full height of viewport */
+    color: #000000; /* Change text color */
+}
+  
+.menu-item {
+    background-color: #ffffff;
+    font-size: 16px; /* Set font size */
+    padding: 10px; /* Add padding */
+    cursor: pointer;
+  }
+  
+.menu-item:hover {
+    background-color: #ffffff; /* Change background on hover */
+}
+  
+.submenu-label {
+    font-weight: bold; /* Bold for submenu labels */
+}
+  
+.menu-item-active {
+    background-color: #ffffff; /* Active state color */
+}
+
+.follow-text {
+    padding-top: 5%;
+    padding-left: 12%;
+    color: #474747;
+}

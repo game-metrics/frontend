@@ -18,6 +18,10 @@ function Header() {
         <input className="header__searchInput" type="text" id="search"/>
         <SearchIcon className="header__searchIcon" />
       </div>
+      {/* studio */}
+      {/* <h2>
+        studio
+      </h2> */}
 
       {/* login & profile */}
       <div className="header__nav">
