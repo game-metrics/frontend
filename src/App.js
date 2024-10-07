@@ -2,6 +2,7 @@ import './App.css';
 //import { BrowserRouter as Router, Routes, Switch } from "react-router-dom";
 import Header from './component/Header/Header';
 import CustomSidebar from './component/Sidebar/CustomSidebar';
+import Home from "./pages/Home/Home"
 
 function App() {
   return (
@@ -9,10 +10,7 @@ function App() {
       <Header />
       <div className="content-container">
       <CustomSidebar />
-      {/* Home */}
-      <h1>
-        Hello clever programmers
-      </h1>
+      <Home />
       </div>
     </div>
   );
