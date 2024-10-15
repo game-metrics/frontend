@@ -7,10 +7,10 @@ function Header() {
 
   const handleImageError = () => {
     setLogoError(true); // 이미지 로드 실패 시 상태 변경
-  };
+  }; 
 
   return (
-    <div className="header">
+<div className="header">
       {/* logo */}
       {!logoError ? (
         <img
@@ -31,17 +31,29 @@ function Header() {
 
       {/* login & profile */}
       <div className="header__nav">
-        <div className="header__option">
-          <span className="header__optionLineOne">Hello</span>
-          <span className="header__optionLineTwo">Sign In</span>
-        </div>
-    
-        <div className="header__option">
-          <span className="header__optionLineOne">Your</span>
-          <span className="header__optionLineTwo">BroadCast</span>
-        </div>
+        
+        {/* 로그인은 팝업으로 */}
+          <div className="header__option">
+            <span className="header__optionLineOne">Hello</span>
+            <span className="header__optionLineTwo">Sign In</span>
+          </div>
+        
+        
+        <a href="/BroadCast">
+          <div className="header__option">
+            <span className="header__optionLineOne">Start</span>
+            <span className="header__optionLineTwo">BroadCast</span>
+          </div>
+        </a>
+
+        <a href="/Profile">
+          <div className="header__option">
+            <span className="header__optionLineOne">Your</span>
+            <span className="header__optionLineTwo">Profile</span>
+          </div>
+        </a>
       </div>
-    </div>
+</div>
   );
 }
 

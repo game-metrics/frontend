@@ -64,10 +64,20 @@
     justify-content: space-evenly;
   }
   
+    /* login start broadcast profile */
   .header__option {
+    padding: 13px;
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
-    margin-right: 10px;
     color: white;
+  }
+  
+  /* login start broadcast profile hover */
+  .header__option:hover {
+    background-color: rgb(48, 48, 48);
+  }
+
+  /* a href underline remove */
+  .hover-link {
+    text-decoration: none;
   }
