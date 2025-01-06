@@ -9,24 +9,27 @@ import CustomSidebar from './component/Sidebar/CustomSidebar';
 
 // 페이지 
 import Home from "./pages/Home/Home"
-import Login from "./pages/Login/Login"
+import SignIn from "./pages/Login/SignIn"
 import Profile from './pages/Profile/Profile';
+import SignUp from './pages/Login/SignUp';
 
 function App() {
   return (
-<div className="App">
+    <div className="App">
       <Header />
-      <div className="content-container">
-      <CustomSidebar />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/Profile" element={<Profile />} />
-        </Routes>
-      </Router>
+      <div className="content-container" style={{ display: 'flex' }}>
+        <CustomSidebar />
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/broadcast" element={<Profile />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </Router>
       </div>
-</div>
+    </div>
   );
 }
 export default App;
