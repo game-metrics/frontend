@@ -1,0 +1,77 @@
+/* General styling for the sign-up container */
+.signup-container {
+    height: calc((1 - var(--template-frame-height, 0)) * 90dvh);
+    min-height: 10%;
+    padding: 16px;
+  }
+  
+  @media (min-width: 1px) {
+    .signup-container {
+      padding: 32px;
+    }
+  }
+  
+  .signup-container::before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image: radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%));
+    background-repeat: no-repeat;
+  }
+  
+  /* Styling for the card */
+  .signup-card {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: 100%;
+    padding: 32px;
+    gap: 16px;
+    margin: auto;
+    box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
+  }
+  
+  @media (min-width: 600px) {
+    .signup-card {
+      width: 450px;
+    }
+  }
+  
+  /* Dark theme styles */
+  .signup-card.dark-theme {
+    box-shadow: hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px;
+  }
+  
+  /* Styling for the logo */
+  .signup-logo {
+    width: 80%;
+    margin: auto;
+  }
+  
+  /* Styling for the form */
+  .form-control {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .divider {
+    margin: 16px 0;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  

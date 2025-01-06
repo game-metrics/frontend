@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Header.css";
+import logo from '../../images/logo1.png'
 import SearchIcon from '@mui/icons-material/Search';
 
 function Header() {
@@ -13,12 +14,14 @@ function Header() {
 <div className="header">
       {/* logo */}
       {!logoError ? (
+        <a href="/">
         <img
           className="header__logo"
-          src="https://gamemetric-imogi-s3.s3.ap-northeast-2.amazonaws.com/gameMetricLogo.png"
+          src={logo}
           alt="GameMetric Logo"
           onError={handleImageError} // 이미지 로드 실패 시 호출
         />
+        </a>
       ) : (
         <span className="header__logoError">이미지가 없습니다</span> // 대체 텍스트
       )}
@@ -33,20 +36,21 @@ function Header() {
       <div className="header__nav">
         
         {/* 로그인은 팝업으로 */}
+        <a href="/sign-in">
           <div className="header__option">
             <span className="header__optionLineOne">Hello</span>
             <span className="header__optionLineTwo">Sign In</span>
           </div>
+        </a>
         
-        
-        <a href="/BroadCast">
+        <a href="/broadCast">
           <div className="header__option">
             <span className="header__optionLineOne">Start</span>
             <span className="header__optionLineTwo">BroadCast</span>
           </div>
         </a>
 
-        <a href="/Profile">
+        <a href="/profile">
           <div className="header__option">
             <span className="header__optionLineOne">Your</span>
             <span className="header__optionLineTwo">Profile</span>
