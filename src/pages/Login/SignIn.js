@@ -15,6 +15,8 @@ import ForgotPassword from './ForgotPassword';
 import { GoogleIcon, FacebookIcon } from './CustomIcons';
 import logo from '../../images/logo1.png';
 import './SignIn.css';  // CSS file
+import { useNavigate } from 'react-router-dom'; // useNavigate
+import { signIn } from '../../api/auth/authAPI'; // axios function
 
 export default function SignIn() {
   const [emailError, setEmailError] = React.useState(false);
@@ -22,6 +24,7 @@ export default function SignIn() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate(); 
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -31,18 +34,32 @@ export default function SignIn() {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!validateInputs()) {
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    const userDetails = {
       email: data.get('email'),
       password: data.get('password'),
-    });
+    };
+
+    try {
+      const response = await signIn(userDetails); // Call the service function
+      console.log('Response:', response);
+      alert('Sign-in successful!');
+      navigate('/'); // 성공시 홈페이지로로
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Sign-up failed. Please try again.');
+    }
   };
 
+  // validation 
   const validateInputs = () => {
     const email = document.getElementById('email');
     const password = document.getElementById('password');
@@ -69,6 +86,9 @@ export default function SignIn() {
 
     return isValid;
   };
+
+  //
+  
 
   return (
     <div style={{ margin: 'auto'}}>
