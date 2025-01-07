@@ -85,7 +85,6 @@ export default function SignUp() {
       setNameError(false);
       setNameErrorMessage('');
     }
-
     return isValid;
   };
 
