@@ -24,6 +24,7 @@ export default function SignIn() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+
   const navigate = useNavigate(); 
 
   const handleClickOpen = () => {
@@ -52,6 +53,7 @@ export default function SignIn() {
       const response = await signIn(userDetails); // Call the service function
       console.log('Response:', response);
       alert('Sign-in successful!');
+      setCookie("auth",response.token,1); // 쿠키로 만들기.
       navigate('/'); // 성공시 홈페이지로로
     } catch (error) {
       console.error('Error:', error);
@@ -87,9 +89,15 @@ export default function SignIn() {
     return isValid;
   };
 
-  //
-  
+  // make jwt into a cookie
+  const setCookie = (name, value, days) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    console.log(`Cookie set: ${name}=${value}`);
+  };
 
+  //
   return (
     <div style={{ margin: 'auto'}}>
     <Stack className="signin-container">
