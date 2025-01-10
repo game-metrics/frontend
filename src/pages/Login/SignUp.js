@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import Link from '@mui/material/Link';
-import { signUp } from '../../api/auth/authAPI'; // axios function
+import { signUp } from '../../api/auth/AuthAPI'; // axios function
 import logo from '../../images/logo1.png';
 import { useNavigate } from 'react-router-dom'; // useNavigate
 import './SignUp.css'; // custom CSS 

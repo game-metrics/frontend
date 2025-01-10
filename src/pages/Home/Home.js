@@ -1,57 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import "./Home.css"
+import { fetchBroadcasts, fetchCategories } from '../../api/broadcast/BroadcastAPI'; // api
+import "./Home.css";
+
 function Home() {
-
-	const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [listData, setListData] = useState([]);
-  	
-  useEffect(() => {
 
+  useEffect(() => {
     const fetchBroadcast = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/broadcasts?page=0&size=3');
-        setData(res.data.data.content);
-        console.log(res.data.data.content);
+        const broadcasts = await fetchBroadcasts(); // Use the imported function
+        setData(broadcasts);
+        console.log(broadcasts);
       } catch (error) {
         console.error(error);
       }
     };
 
-    const fetchCatagory = async () => {
+    const fetchCategory = async () => {
       try {
         const cachedData = localStorage.getItem("listData");
     
         if (cachedData) {
           // Use cached data
           setListData(JSON.parse(cachedData));
-           console.log("there is list"+ cachedData)
+          console.log("there is list " + cachedData);
         } else {
           // Fetch data if not already cached
-          console.log("there is no catasgory list")
-          const res = await axios.get("http://localhost:8080/catagory");
-          const data = res.data; // Axios automatically parses JSON responses
-          setListData(data);
-          localStorage.setItem("listData", JSON.stringify(data)); // Cache the data
+          console.log("there is no category list");
+          const categories = await fetchCategories(); // Use the imported function
+          setListData(categories);
+          localStorage.setItem("listData", JSON.stringify(categories)); // Cache the data
         }
       } catch (error) {
         console.error("Failed to fetch category data:", error);
       }
     };
-  
-    // active
-    fetchCatagory();
+
+    // Active fetching when component mounts
+    fetchCategory();
     fetchBroadcast();
   }, []);
 
-  // getting catagory
+  // Get category name by id
   const getCategoryNameById = (id) => {
-     const category = listData.find((cat) => cat.id === id);
-    return category ? category.catagory : "카테고리 알수 없음";
+    const cachedData = localStorage.getItem("listData");
+    console.log(listData);
+    if(cachedData){
+      const category = listData.data.find((cat) => cat.id === id);
+      return category ? category.catagory : "카테고리 알수 없음";
+    }
+    return "카테고리 알수 없음"
   };
 
   return (
-    <div class="home">
+    <div className="home">
       {/* Slidebar */}
       {/* following streamer stream */}
 
@@ -59,10 +62,14 @@ function Home() {
         {data.length > 0 ? (
           data.map((item, index) => (
             <div key={index} className="data-item">
-              <img src={item.thumbNailUrl} alt={item.title} style={{ width: '300px', height: '200px' }} />
+              <img
+                src={item.thumbNailUrl}
+                alt={item.title}
+                style={{ width: '300px', height: '200px' }}
+              />
               <h2>{item.title}</h2>
               <p>Category: {getCategoryNameById(item.catagoryId)}</p>
-              <br/>
+              <br />
             </div>
           ))
         ) : (
@@ -72,7 +79,7 @@ function Home() {
 
       {/* random videos */}
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

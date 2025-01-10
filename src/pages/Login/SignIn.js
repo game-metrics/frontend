@@ -16,7 +16,7 @@ import { GoogleIcon, FacebookIcon } from "./CustomIcons";
 import logo from "../../images/logo1.png";
 import "./SignIn.css"; // CSS file
 import { useNavigate } from "react-router-dom"; // useNavigate
-import { signIn } from "../../api/auth/authAPI"; // axios function
+import { signIn } from "../../api/auth/AuthAPI"; // axios function
 
 export default function SignIn() {
   const [emailError, setEmailError] = React.useState(false);
