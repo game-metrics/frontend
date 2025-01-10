@@ -5,3 +5,20 @@
     /* 임시 / temporary */
     background-color: antiquewhite;
 }
+
+.data-list{
+    display: flex;
+    margin: 2% 3% 3% 3%;
+}
+
+.data-item{
+    margin-left: 10px;
+}
+
+.data-item h2{
+    color: rgb(97, 97, 97);
+}
+
+.data-item p{
+    color: rgb(255, 30, 0);
+}

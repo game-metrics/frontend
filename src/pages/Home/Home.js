@@ -59,7 +59,7 @@ function Home() {
         {data.length > 0 ? (
           data.map((item, index) => (
             <div key={index} className="data-item">
-              <img src={item.thumbNailUrl} alt={item.title} style={{ width: '150px', height: '150px' }} />
+              <img src={item.thumbNailUrl} alt={item.title} style={{ width: '300px', height: '200px' }} />
               <h2>{item.title}</h2>
               <p>Category: {getCategoryNameById(item.catagoryId)}</p>
               <br/>
