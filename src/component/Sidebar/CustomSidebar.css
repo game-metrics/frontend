@@ -30,3 +30,24 @@
     padding-left: 12%;
     color: #474747;
 }
+.toggle-button {
+    top: 10px;
+    left: 10px;
+    height: 40px;
+    z-index: 1000;
+    padding: 10px 15px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .toggle-button:hover {
+    background-color: #0056b3;
+  }
+
+  .over-all-div{
+    display: flex;
+  }
+  

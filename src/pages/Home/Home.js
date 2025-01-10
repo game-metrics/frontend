@@ -4,9 +4,13 @@ import "./Home.css"
 function Home() {
 
 	const [data, setData] = useState([]);
+  const [listData, setListData] = useState([]);
   	
   useEffect(() => {
-    const fetchData = async () => {
+
+    const cachedData = localStorage.getItem("listData");
+
+    const fetchBroadcast = async () => {
       try {
         const res = await axios.get('http://localhost:8080/broadcasts?page=0&size=3');
         setData(res.data.data.content);
@@ -15,8 +19,31 @@ function Home() {
         console.error(error);
       }
     };
+
+    const fetchCatagory = async () => {
+      try {
+        const cachedData = localStorage.getItem("listData");
+    
+        if (cachedData) {
+          // Use cached data
+          setListData(JSON.parse(cachedData));
+          console.log("there is list")
+        } else {
+          // Fetch data if not already cached
+          console.log("there is no list")
+          const res = await axios.get("http://localhost:8080/catagory");
+          const data = res.data; // Axios automatically parses JSON responses
+          setListData(data);
+          localStorage.setItem("listData", JSON.stringify(data)); // Cache the data
+        }
+      } catch (error) {
+        console.error("Failed to fetch category data:", error);
+      }
+    };
   
-    fetchData();
+    // active
+    fetchCatagory();
+    fetchBroadcast();
   }, []);
 
   return (
