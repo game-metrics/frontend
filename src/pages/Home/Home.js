@@ -8,8 +8,6 @@ function Home() {
   	
   useEffect(() => {
 
-    const cachedData = localStorage.getItem("listData");
-
     const fetchBroadcast = async () => {
       try {
         const res = await axios.get('http://localhost:8080/broadcasts?page=0&size=3');
@@ -27,10 +25,10 @@ function Home() {
         if (cachedData) {
           // Use cached data
           setListData(JSON.parse(cachedData));
-          console.log("there is list")
+           console.log("there is list"+ cachedData)
         } else {
           // Fetch data if not already cached
-          console.log("there is no list")
+          console.log("there is no catasgory list")
           const res = await axios.get("http://localhost:8080/catagory");
           const data = res.data; // Axios automatically parses JSON responses
           setListData(data);
@@ -46,6 +44,12 @@ function Home() {
     fetchBroadcast();
   }, []);
 
+  // getting catagory
+  const getCategoryNameById = (id) => {
+     const category = listData.find((cat) => cat.id === id);
+    return category ? category.catagory : "카테고리 알수 없음";
+  };
+
   return (
     <div class="home">
       {/* Slidebar */}
@@ -57,6 +61,7 @@ function Home() {
             <div key={index} className="data-item">
               <h2>{item.title}</h2>
               <img src={item.thumbNailUrl} alt={item.title} style={{ width: '150px', height: '150px' }} />
+              <h2>Category: {getCategoryNameById(item.catagoryId)}</h2>
             </div>
           ))
         ) : (
