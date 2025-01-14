@@ -11,7 +11,6 @@ function Home() {
       try {
         const broadcasts = await fetchBroadcasts(); // Use the imported function
         setData(broadcasts);
-        console.log(broadcasts);
       } catch (error) {
         console.error(error);
       }
@@ -24,7 +23,6 @@ function Home() {
         if (cachedData) {
           // Use cached data
           setListData(JSON.parse(cachedData));
-          console.log("there is list " + cachedData);
         } else {
           // Fetch data if not already cached
           console.log("there is no category list");
@@ -45,7 +43,6 @@ function Home() {
   // Get category name by id
   const getCategoryNameById = (id) => {
     const cachedData = localStorage.getItem("listData");
-    console.log(listData);
     if(cachedData){
       const category = listData.data.find((cat) => cat.id === id);
       return category ? category.catagory : "카테고리 알수 없음";

@@ -24,10 +24,11 @@ export default function SignIn() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
-
+  const KAKAO_CLIENT_ID = '6a1863c548596c3588b86effdd899423';
+  const REDIRECT_URI = 'http://localhost:3000/sign-in/kakao';
   const navigate = useNavigate();
 
-  // Helper function to get a cookie by name
+  // 쿠키 가져오기기
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -35,7 +36,7 @@ export default function SignIn() {
     return null;
   };
 
-  // Redirect if auth token exists
+  // auth 쿠치가 있으면 홉페이지로 이동동
   React.useEffect(() => {
     const authToken = getCookie("auth");
     if (authToken) {
@@ -79,7 +80,7 @@ export default function SignIn() {
     }
   };
 
-  // Validate inputs
+  // Validate inputs 입력 validation
   const validateInputs = () => {
     const email = document.getElementById("email");
     const password = document.getElementById("password");
@@ -107,13 +108,22 @@ export default function SignIn() {
     return isValid;
   };
 
-  // Set a cookie with expiration
+  // Set a cookie with expiration 쿠키 만들기기
   const setCookie = (name, value, days) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
     document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
     console.log(`Cookie set: ${name}=${value}`);
   };
+
+  // 카카오 로그인
+  const handleLogin = () => {
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
+    window.location.href = kakaoAuthUrl;
+    
+  };
+
+
 
   return (
     <div style={{ margin: "auto" }}>
@@ -211,7 +221,7 @@ export default function SignIn() {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert("Sign in with Kakao")}
+              onClick={() => handleLogin()}
             >
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg"
@@ -229,6 +239,6 @@ export default function SignIn() {
           </Box>
         </MuiCard>
       </Stack>
-    </div>
+    </div> 
   );
 }

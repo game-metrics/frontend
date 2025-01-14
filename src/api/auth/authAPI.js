@@ -32,3 +32,14 @@ export const signIn = async (userDetails) => {
     throw error.response?.data || error.message;
   }
 };
+
+// OAuth
+export const loginWithKakao = async (code) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/users/login/kakao`, { code });
+    return response.data.data; // 서버에서 반환된 이메일
+  } catch (error) {
+    console.error('Error during Kakao login:', error);
+    throw error; // 에러를 호출한 쪽으로 전달
+  }
+};
