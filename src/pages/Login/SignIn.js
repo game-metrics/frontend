@@ -24,8 +24,11 @@ export default function SignIn() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const KAKAO_CLIENT_ID = '6a1863c548596c3588b86effdd899423';
-  const REDIRECT_URI = 'http://localhost:3000/sign-in/kakao';
+
+  // OAUTH2.0
+  const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
+  const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
+
   const navigate = useNavigate();
 
   // 쿠키 가져오기기
@@ -39,6 +42,7 @@ export default function SignIn() {
   // auth 쿠치가 있으면 홉페이지로 이동동
   React.useEffect(() => {
     const authToken = getCookie("auth");
+    console.log(KAKAO_CLIENT_ID +" : "+KAKAO_REDIRECT_URI);
     if (authToken) {
       console.log("Auth token exists, redirecting to main page.");
       navigate("/"); // Redirect to the main page
@@ -118,12 +122,10 @@ export default function SignIn() {
 
   // 카카오 로그인
   const handleLogin = () => {
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}`;
     window.location.href = kakaoAuthUrl;
     
   };
-
-
 
   return (
     <div style={{ margin: "auto" }}>
@@ -239,6 +241,12 @@ export default function SignIn() {
           </Box>
         </MuiCard>
       </Stack>
+
+      <a 
+  href="https://accounts.google.com/o/oauth2/v2/auth?client_id=175362941207-5utd0bap67slhe4o8511qjcacetb92fe.apps.googleusercontent.com&redirect_uri=http://localhost:3000/sign-in/google&response_type=code&scope=email profile">
+  구글 로그인
+</a>
+
     </div> 
   );
 }

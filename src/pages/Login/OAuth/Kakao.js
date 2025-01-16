@@ -18,7 +18,6 @@ const KakaoCallback = () => {
     const code = searchParams.get('code');
 
     if (code) {
-      // 분리된 Axios 로직 호출
       loginWithKakao(code)
         .then((token) => {
           alert(`로그인 성공!`);

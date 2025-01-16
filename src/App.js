@@ -11,6 +11,7 @@ import CustomSidebar from './component/Sidebar/CustomSidebar';
 import Home from "./pages/Home/Home"
 import SignIn from "./pages/Login/SignIn"
 import KakaoCallback from "./pages/Login/OAuth/Kakao"
+import GoogleCallback from "./pages/Login/OAuth/Google"
 import Profile from './pages/Profile/Profile';
 import SignUp from './pages/Login/SignUp';
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="/broadcast" element={<Profile />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-in/kakao" element={<KakaoCallback />} />
+            <Route path="/sign-in/google" element={<GoogleCallback />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
