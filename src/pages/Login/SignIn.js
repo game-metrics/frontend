@@ -28,7 +28,10 @@ export default function SignIn() {
   // OAUTH2.0
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
-
+  const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const GOOGLE_CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
+  const GOOGLE_REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+  
   const navigate = useNavigate();
 
   // 쿠키 가져오기기
@@ -121,10 +124,13 @@ export default function SignIn() {
   };
 
   // 카카오 로그인
-  const handleLogin = () => {
+  const handleKakaoLogin = () => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}`;
     window.location.href = kakaoAuthUrl;
-    
+  };
+  const handleGoogleLogin = () => {
+    const kakaoAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=http://localhost:3000/sign-in/google&response_type=code&scope=email profile`;
+    window.location.href = kakaoAuthUrl;
   };
 
   return (
@@ -207,7 +213,7 @@ export default function SignIn() {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert("Sign in with Google")}
+              onClick={() => handleGoogleLogin()}
               startIcon={<GoogleIcon />}
             >
               Sign in with Google
@@ -215,15 +221,7 @@ export default function SignIn() {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert("Sign in with Facebook")}
-              startIcon={<FacebookIcon />}
-            >
-              Sign in with Facebook
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => handleLogin()}
+              onClick={() => handleKakaoLogin()}
             >
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg"
@@ -242,10 +240,10 @@ export default function SignIn() {
         </MuiCard>
       </Stack>
 
-      <a 
-  href="https://accounts.google.com/o/oauth2/v2/auth?client_id=175362941207-5utd0bap67slhe4o8511qjcacetb92fe.apps.googleusercontent.com&redirect_uri=http://localhost:3000/sign-in/google&response_type=code&scope=email profile">
+      {/* <a 
+  // href="https://accounts.google.com/o/oauth2/v2/auth?client_id=175362941207-5utd0bap67slhe4o8511qjcacetb92fe.apps.googleusercontent.com&redirect_uri=http://localhost:3000/sign-in/google&response_type=code&scope=email profile">
   구글 로그인
-</a>
+</a> */}
 
     </div> 
   );
