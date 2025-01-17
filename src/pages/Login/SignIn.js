@@ -12,11 +12,11 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import ForgotPassword from "./ForgotPassword";
-import { GoogleIcon, FacebookIcon } from "./CustomIcons";
+import { GoogleIcon} from "./CustomIcons";
 import logo from "../../images/logo1.png";
 import "./SignIn.css"; // CSS file
 import { useNavigate } from "react-router-dom"; // useNavigate
-import { signIn } from "../../api/auth/AuthAPI"; // axios function
+import { signIn } from "../../api/auth/authApi"; // axios function
 
 export default function SignIn() {
   const [emailError, setEmailError] = React.useState(false);
@@ -29,8 +29,6 @@ export default function SignIn() {
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
   const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  const GOOGLE_CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
-  const GOOGLE_REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
   
   const navigate = useNavigate();
 
@@ -45,7 +43,6 @@ export default function SignIn() {
   // auth 쿠치가 있으면 홉페이지로 이동동
   React.useEffect(() => {
     const authToken = getCookie("auth");
-    console.log(KAKAO_CLIENT_ID +" : "+KAKAO_REDIRECT_URI);
     if (authToken) {
       console.log("Auth token exists, redirecting to main page.");
       navigate("/"); // Redirect to the main page
@@ -76,7 +73,6 @@ export default function SignIn() {
 
     try {
       const response = await signIn(userDetails); // Call the service function
-      console.log("Response:", response);
       alert("Sign-in successful!");
       setCookie("auth", response.token, 1); // Set auth cookie
       
@@ -120,7 +116,6 @@ export default function SignIn() {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
     document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-    console.log(`Cookie set: ${name}=${value}`);
   };
 
   // 카카오 로그인

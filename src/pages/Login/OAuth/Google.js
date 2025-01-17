@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Assuming you're using Axios for API calls
+import { loginWithGoogle } from '../../../api/auth/authApi';
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
@@ -19,9 +19,7 @@ const GoogleCallback = () => {
 
     if (code) {
       // spring 으로 전송
-      axios
-        .post("http://localhost:8080/users/login/google", { code })
-        .then((response) => {
+      loginWithGoogle(code).then((response) => {
           alert("로그인 성공!"+response.data.data);
           setCookie("auth", response.data.data, 1);
           navigate("/sign-in");

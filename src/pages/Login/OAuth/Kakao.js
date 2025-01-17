@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {loginWithKakao} from '../../../api/auth/AuthAPI';
+import {loginWithKakao} from '../../../api/auth/authApi';
 
 const KakaoCallback = () => {
   const navigate = useNavigate();
@@ -10,7 +10,6 @@ const KakaoCallback = () => {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
     document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-    console.log(`Cookie set: ${name}=${value}`);
     };
 
   useEffect(() => {
