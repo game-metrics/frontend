@@ -14,6 +14,8 @@ import KakaoCallback from "./pages/Login/OAuth/Kakao"
 import GoogleCallback from "./pages/Login/OAuth/Google"
 import Profile from './pages/Profile/Profile';
 import SignUp from './pages/Login/SignUp';
+import BroadCast from './pages/broadcast/Broadcast';
+import Stream from './pages/broadcast/StreamPage';
 
 function App() {
   return (
@@ -24,7 +26,8 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/broadcast" element={<Profile />} />
+            <Route path="/broadcast" element={<BroadCast />} />
+            <Route path="/stream" element={<Stream />} /> 
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-in/kakao" element={<KakaoCallback />} />
             <Route path="/sign-in/google" element={<GoogleCallback />} />

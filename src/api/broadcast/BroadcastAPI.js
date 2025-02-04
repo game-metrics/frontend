@@ -3,7 +3,7 @@ import axios from 'axios';
 // Fetch broadcasts
 export const fetchBroadcasts = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/broadcasts?page=0&size=3');
+    const response = await axios.get('http://localhost:8080/broadcasts?page=0&size=5');
     return response.data.data.content; 
   } catch (error) {
     console.error("Error fetching broadcasts:", error);

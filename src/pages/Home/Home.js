@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchBroadcasts, fetchCategories } from '../../api/broadcast/BroadcastAPI'; // api
+import { Link } from 'react-router-dom';  // Add this line
+
 import "./Home.css";
 
 function Home() {
@@ -52,20 +54,25 @@ function Home() {
 
   return (
     <div className="home">
+      {/* Video Player Rectangle */}
+
       {/* Slidebar */}
-      {/* following streamer stream */}
+      {/* Following streamer streams */}
 
       <div className="data-list">
         {data.length > 0 ? (
           data.map((item, index) => (
             <div key={index} className="data-item">
-              <img
-                src={item.thumbNailUrl}
-                alt={item.title}
-                style={{ width: '300px', height: '200px' }}
-              />
-              <h2>{item.title}</h2>
-              <p>Category: {getCategoryNameById(item.catagoryId)}</p>
+              {/* Wrapping the broadcast item with Link */}
+              <Link to={`/broadcast`}>
+                <img
+                  src={item.thumbNailUrl}
+                  alt={item.title}
+                  style={{ width: '300px', height: '200px' }}
+                />
+                <h2>{item.title}</h2>
+                <p>Category: {getCategoryNameById(item.catagoryId)}</p>
+              </Link>
               <br />
             </div>
           ))
@@ -74,7 +81,7 @@ function Home() {
         )}
       </div>
 
-      {/* random videos */}
+      {/* Random videos */}
     </div>
   );
 }

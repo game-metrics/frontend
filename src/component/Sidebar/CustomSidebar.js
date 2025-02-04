@@ -3,14 +3,6 @@ import './CustomSidebar.css';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 
 function CustomSidebar() {
-  // State to manage sidebar visibility
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-
-  // Toggle function for sidebar
-  const toggleSidebar = () => {
-    setIsSidebarVisible(!isSidebarVisible);
-  };
-
   // // Following streamer
   // const [FollowingListError, setFollowingListError] = useState(false); // Image load error state
 
@@ -25,7 +17,6 @@ function CustomSidebar() {
     <div className="over-all-div">
 
       {/* Sidebar */}
-      {isSidebarVisible && (
         <div className="menu">
           <Sidebar className="sidebar">
             <Menu>
@@ -70,11 +61,6 @@ function CustomSidebar() {
             </Menu>
           </Sidebar>
         </div>
-      )}
-       {/* Toggle Button */}
-       <button className="toggle-button" onClick={toggleSidebar}>
-        {isSidebarVisible ? '<<' : '>>'}
-      </button>
     </div>
   );
 }

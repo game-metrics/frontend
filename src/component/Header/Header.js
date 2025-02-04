@@ -74,7 +74,7 @@ function Header() {
           </div>
         )}
 
-        <a href="/broadCast">
+        <a href="/stream">
           <div className="header__option">
             <span className="header__optionLineOne">Start</span>
             <span className="header__optionLineTwo">BroadCast</span>
