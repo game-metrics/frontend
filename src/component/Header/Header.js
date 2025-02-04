@@ -82,7 +82,6 @@ function Header() {
         </a>
 
         <a href="/profile">
-        <a href="/profile">
           <div className="header__option">
             <span className="header__optionLineOne">Your</span>
             <span className="header__optionLineTwo">Profile</span>
