@@ -18,9 +18,10 @@ const KakaoCallback = () => {
 
     if (code) {
       loginWithKakao(code)
-        .then((token) => {
-          alert(`로그인 성공!`);
-          setCookie("auth", token, 1); // Set auth cookie
+        .then((data) => {
+          console.log(`로그인 성공!`);
+          setCookie("auth", data.token, 1); // Set auth cookie
+          setCookie("nickname", data.nickname, 1); // Set nickname cookie
           navigate('/sign-in');
           window.location.reload();
         })

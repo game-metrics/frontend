@@ -20,8 +20,9 @@ const GoogleCallback = () => {
     if (code) {
       // spring 으로 전송
       loginWithGoogle(code).then((response) => {
-          alert("로그인 성공!"+response.data.data);
-          setCookie("auth", response.data.data, 1);
+          console.log("로그인 성공!"+response.data.data);
+          setCookie("auth", response.data.data.token, 1);
+          setCookie("nickname", response.data.data.nickname, 1);
           navigate("/sign-in");
           window.location.reload();
         })
