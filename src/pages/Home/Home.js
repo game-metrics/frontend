@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchBroadcasts, fetchCategories } from '../../api/broadcast/BroadcastAPI'; // api
 import { Link } from 'react-router-dom';  // Add this line
 
-import "./Home.css";
+import "./css/Home.css";
 
 function Home() {
   const [data, setData] = useState([]);

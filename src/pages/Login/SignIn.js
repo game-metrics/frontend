@@ -14,7 +14,7 @@ import MuiCard from "@mui/material/Card";
 import ForgotPassword from "./ForgotPassword";
 import { GoogleIcon} from "./CustomIcons";
 import logo from "../../images/logo1.png";
-import "./SignIn.css"; // CSS file
+import "./css/SignIn.css"; // CSS file
 import { useNavigate } from "react-router-dom"; // useNavigate
 import { signIn } from '../../api/auth/authAPI'; 
 
