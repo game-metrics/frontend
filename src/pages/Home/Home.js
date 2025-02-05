@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { fetchBroadcasts, fetchCategories } from '../../api/broadcast/BroadcastAPI'; // api
-import { Link } from 'react-router-dom';  // Add this line
+import { fetchBroadcasts, fetchCategories } from '../../api/broadcast/BroadcastAPI';
+import { Link } from 'react-router-dom';
 
 import "./css/Home.css";
 
@@ -11,7 +11,7 @@ function Home() {
   useEffect(() => {
     const fetchBroadcast = async () => {
       try {
-        const broadcasts = await fetchBroadcasts(); // Use the imported function
+        const broadcasts = await fetchBroadcasts();
         setData(broadcasts);
       } catch (error) {
         console.error(error);
@@ -23,48 +23,39 @@ function Home() {
         const cachedData = localStorage.getItem("listData");
     
         if (cachedData) {
-          // Use cached data
           setListData(JSON.parse(cachedData));
         } else {
-          // Fetch data if not already cached
           console.log("there is no category list");
-          const categories = await fetchCategories(); // Use the imported function
+          const categories = await fetchCategories();
           setListData(categories);
-          localStorage.setItem("listData", JSON.stringify(categories)); // Cache the data
+          localStorage.setItem("listData", JSON.stringify(categories));
         }
       } catch (error) {
         console.error("Failed to fetch category data:", error);
       }
     };
 
-    // Active fetching when component mounts
     fetchCategory();
     fetchBroadcast();
   }, []);
 
-  // Get category name by id
   const getCategoryNameById = (id) => {
     const cachedData = localStorage.getItem("listData");
-    if(cachedData){
+    if (cachedData) {
       const category = listData.data.find((cat) => cat.id === id);
-      return category ? category.catagory : "카테고리 알수 없음";
+      return category ? category.catagory : "카테고리 알 수 없음";
     }
-    return "카테고리 알수 없음"
+    return "카테고리 알 수 없음";
   };
 
   return (
     <div className="home">
-      {/* Video Player Rectangle */}
-
-      {/* Slidebar */}
-      {/* Following streamer streams */}
-
       <div className="data-list">
         {data.length > 0 ? (
           data.map((item, index) => (
             <div key={index} className="data-item">
-              {/* Wrapping the broadcast item with Link */}
-              <Link to={`/broadcast`}>
+              {/* id를 query parameter로 전달 */}
+              <Link to={`/broadcast?id=${item.id}`}>
                 <img
                   src={item.thumbNailUrl}
                   alt={item.title}
@@ -80,8 +71,6 @@ function Home() {
           <p>No broadcasts available</p>
         )}
       </div>
-
-      {/* Random videos */}
     </div>
   );
 }
