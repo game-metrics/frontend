@@ -16,6 +16,7 @@ import Profile from './pages/Profile/Profile';
 import SignUp from './pages/Login/SignUp';
 import BroadCast from './pages/broadcast/Broadcast';
 import Stream from './pages/broadcast/StreamPage';
+import BroadcastSetup from './pages/broadcast/StreamSetup';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-in/kakao" element={<KakaoCallback />} />
             <Route path="/sign-in/google" element={<GoogleCallback />} />
+            <Route path="/broadcast-setup" element={<BroadcastSetup />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>

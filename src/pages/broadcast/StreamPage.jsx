@@ -19,9 +19,9 @@ function Stream() {
           }
         } catch (error) {
           if (error.name === "NotFoundError") {
-            console.error("No camera or microphone found.");
+            alert("No camera or microphone found.");
           } else {
-            console.error("Error accessing media devices", error);
+            alert("Error accessing media devices", error);
           }
         }
       };
