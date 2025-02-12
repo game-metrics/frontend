@@ -81,25 +81,29 @@ function Header() {
             style={{ cursor: "pointer" }}
           >
             <span className="header__optionLineOne">
-              {nickname ? `안녕하세요, ${nickname}` : "Hello"}
+              {nickname ? `${nickname}` : "Hello"}
             </span>
             <span className="header__optionLineTwo">Log Out</span>
           </div>
         )}
 
-        <a href="/broadcast-setup">
-          <div className="header__option">
-            <span className="header__optionLineOne">Start</span>
-            <span className="header__optionLineTwo">BroadCast</span>
-          </div>
-        </a>
+        {isAuthenticated && (
+          <a href="/broadcast-setup">
+            <div className="header__option">
+              <span className="header__optionLineOne">Start</span>
+              <span className="header__optionLineTwo">BroadCast</span>
+            </div>
+          </a>
+        )}
 
-        <a href="/profile">
-          <div className="header__option">
-            <span className="header__optionLineOne">Your</span>
-            <span className="header__optionLineTwo">Profile</span>
-          </div>
-        </a>
+        {isAuthenticated && (
+          <a href="/profile">
+            <div className="header__option">
+              <span className="header__optionLineOne">Your</span>
+              <span className="header__optionLineTwo">Profile</span>
+            </div>
+          </a>
+        )}
       </div>
     </div>
   );
