@@ -29,6 +29,7 @@ export default function SignIn() {
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
   const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const GOOGLE_REDIRECT_URI=  process.env.REACT_APP_GOOGLE_REDIRECT_URI
   
   const navigate = useNavigate();
 
@@ -124,7 +125,7 @@ export default function SignIn() {
     window.location.href = kakaoAuthUrl;
   };
   const handleGoogleLogin = () => {
-    const kakaoAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=http://localhost:3000/sign-in/google&response_type=code&scope=email profile`;
+    const kakaoAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}`;
     window.location.href = kakaoAuthUrl;
   };
 

@@ -8,11 +8,12 @@ const Profile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
+  const backendBase = process.env.REACT_APP_BACKEND_URL;
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/users", {
+      const response = await axios.post(backendBase+"/users", {
         currentPassword,
         newPassword,
       });

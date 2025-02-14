@@ -8,6 +8,7 @@ function BroadCast() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [nickname, setNickname] = useState(""); // 닉네임 상태
+  const backendurl = process.env.REACT_APP_BACKEND_URL;
 
   // 쿠키에서 특정 이름의 값을 가져오는 함수
   const getCookie = (name) => {
@@ -21,7 +22,7 @@ function BroadCast() {
     const userNickname = getCookie("nickname"); // 닉네임 쿠키 가져오기
     setNickname(userNickname || "익명"); // 닉네임 없으면 기본값 설정
 
-    let ws = new WebSocket("ws://localhost:8080/ws/chat");
+    let ws = new WebSocket(backendurl+"/ws/chat");
 
     ws.onopen = () => {
       console.log("WebSocket 연결됨");
@@ -42,7 +43,7 @@ function BroadCast() {
 
     ws.onclose = () => {
       console.log("WebSocket 연결 종료됨. 재연결 시도 중...");
-      setTimeout(() => setSocket(new WebSocket("ws://localhost:8080/ws/chat")), 3000);
+      setTimeout(() => setSocket(new WebSocket(backendurl+"/ws/chat")), 3000);
     };
 
     setSocket(ws);
