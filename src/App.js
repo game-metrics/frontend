@@ -16,11 +16,11 @@ function App() {
   };
 
   return (
-    <Router> {/* ✅ 최상위에서 Router 감싸기 */}
+    <Router>
       <div className="App">
-        <Header toggleSidebar={toggleSidebar} /> {/* ✅ 상태 전달 */}
+        <Header toggleSidebar={toggleSidebar} />
         <div className="content-container" style={{ display: "flex" }}>
-          <CustomSidebar isSidebarOpen={isSidebarOpen} /> {/* ✅ 상태 전달 */}
+          <CustomSidebar isSidebarOpen={isSidebarOpen} />
           <Routes>
             {routes.map((route) => (
               <Route key={route.path} path={route.path} element={route.element} />
