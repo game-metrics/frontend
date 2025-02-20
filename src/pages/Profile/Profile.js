@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchProfile, changePassword } from "./ProfileApi.js";
+import { fetchProfile, changePassword } from "../../api/profile/ProfileApi.js";
 import "./css/Profile.css";
 
 const Profile = () => {
