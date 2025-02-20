@@ -3,14 +3,13 @@ import { useParams } from "react-router-dom"; // URL 파라미터 가져오기
 import "./css/Broadcast.css";
 
 function BroadCast() {
-  const { roomId } = useParams(); // URL에서 roomId 가져오기
+  const { roomId } = useParams();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [nickname, setNickname] = useState(""); // 닉네임 상태
-  const backendurl = process.env.REACT_APP_BACKEND_URL;
+  const [nickname, setNickname] = useState(""); 
+  const backendurl = process.env.REACT_APP_BACKEND_WS; // .env 파일에서 WebSocket 주소 가져오기
 
-  // 쿠키에서 특정 이름의 값을 가져오는 함수
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -19,21 +18,34 @@ function BroadCast() {
   };
 
   useEffect(() => {
-    const userNickname = getCookie("nickname"); // 닉네임 쿠키 가져오기
-    setNickname(userNickname || "익명"); // 닉네임 없으면 기본값 설정
+    console.log("Backend URL:", backendurl); // backendurl 값 확인
+    if (!backendurl) {
+      console.error("WebSocket URL이 설정되지 않았습니다.");
+      return;
+    }
+    
+    const userNickname = String(getCookie("nickname") || "익명");
+    setNickname(userNickname);
+    console.log(userNickname);
+    console.log(nickname);
 
-    let ws = new WebSocket(backendurl+"/ws/chat");
+    let ws = new WebSocket(`${backendurl}/ws/chat`); // 웹소켓 연결
 
     ws.onopen = () => {
       console.log("WebSocket 연결됨");
 
       const joinMessage = {
         type: "JOIN",
-        roomId: roomId, // URL에서 가져온 채팅방 ID
-        sender: userNickname || "익명",
-        message: `${userNickname || "익명"} 님이 입장하셨습니다.`,
+        roomId: roomId,
+        sender: userNickname,
+        message: `${userNickname} 님이 입장하셨습니다.`,
       };
-      ws.send(JSON.stringify(joinMessage));
+
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(joinMessage));
+      } else {
+        console.warn("WebSocket이 아직 OPEN 상태가 아닙니다.");
+      }
     };
 
     ws.onmessage = (event) => {
@@ -42,8 +54,8 @@ function BroadCast() {
     };
 
     ws.onclose = () => {
-      console.log("WebSocket 연결 종료됨. 재연결 시도 중...");
-      setTimeout(() => setSocket(new WebSocket(backendurl+"/ws/chat")), 3000);
+      console.log("WebSocket 연결 종료됨. 3초 후 재연결 시도...");
+      setTimeout(() => setSocket(new WebSocket(`${backendurl}/ws/chat`)), 3000);
     };
 
     setSocket(ws);
@@ -53,24 +65,26 @@ function BroadCast() {
         ws.close();
       }
     };
-  }, [roomId]); // roomId가 변경될 때마다 실행
+  }, [roomId, backendurl]); // backendurl도 종속성에 추가
 
   const sendMessage = useCallback(() => {
-    if (socket && message.trim() !== "") {
+    if (socket && socket.readyState === WebSocket.OPEN && message.trim() !== "") {
       const chatMessage = {
         type: "TALK",
         roomId: roomId,
-        sender: nickname, // 쿠키에서 가져온 닉네임 사용
+        sender: nickname,
         message: message,
       };
+
       socket.send(JSON.stringify(chatMessage));
-      setMessage(""); // 입력창 초기화
+      setMessage(""); 
+    } else {
+      console.warn("WebSocket이 아직 OPEN 상태가 아닙니다.");
     }
   }, [socket, message, roomId, nickname]);
 
   return (
     <div className="container">
-      {/* 생방송 동영상 */}
       <div className="videoContainer">
         <h2 className="title">방송</h2>
         <video controls autoPlay muted className="video">
@@ -79,7 +93,6 @@ function BroadCast() {
         </video>
       </div>
 
-      {/* 채팅 박스 */}
       <div className="chatBox">
         <h2 className="title">채팅</h2>
         <div className="messageContainer">

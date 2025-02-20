@@ -12,11 +12,11 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import ForgotPassword from "./ForgotPassword";
-import { GoogleIcon} from "./CustomIcons";
+import { GoogleIcon } from "./CustomIcons";
 import logo from "../../images/logo1.png";
 import "./css/SignIn.css"; // CSS file
 import { useNavigate } from "react-router-dom"; // useNavigate
-import { signIn } from '../../api/auth/authAPI'; 
+import { signIn } from "../../api/auth/authAPI"; 
 
 export default function SignIn() {
   const [emailError, setEmailError] = React.useState(false);
@@ -29,11 +29,11 @@ export default function SignIn() {
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
   const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  const GOOGLE_REDIRECT_URI=  process.env.REACT_APP_GOOGLE_REDIRECT_URI
-  
+  const GOOGLE_REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+
   const navigate = useNavigate();
 
-  // 쿠키 가져오기기
+  // 쿠키 가져오기
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -41,7 +41,7 @@ export default function SignIn() {
     return null;
   };
 
-  // auth 쿠치가 있으면 홉페이지로 이동동
+  // auth 쿠키가 있으면 메인 페이지로 이동
   React.useEffect(() => {
     const authToken = getCookie("auth");
     if (authToken) {
@@ -73,18 +73,21 @@ export default function SignIn() {
     };
 
     try {
-      const response = await signIn(userDetails); // Call the service function
+      const response = await signIn(userDetails); // 로그인 API 호출
       alert("Sign-in successful!");
-      setCookie("auth", response.token, 1); // Set auth cookie
-      
-      window.location.reload(); // Refresh the page
+
+      // token과 nickname을 쿠키에 저장
+      setCookie("auth", response.token, 1);
+      setCookie("nickname", response.nickname, 1);
+
+      window.location.reload(); // 새로고침
     } catch (error) {
       console.error("Error:", error);
       alert("Sign-in failed. Please try again.");
     }
   };
 
-  // Validate inputs 입력 validation
+  // 입력값 검증
   const validateInputs = () => {
     const email = document.getElementById("email");
     const password = document.getElementById("password");
@@ -112,7 +115,7 @@ export default function SignIn() {
     return isValid;
   };
 
-  // Set a cookie with expiration 쿠키 만들기기
+  // 쿠키 설정 함수
   const setCookie = (name, value, days) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -124,9 +127,11 @@ export default function SignIn() {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}`;
     window.location.href = kakaoAuthUrl;
   };
+
+  // 구글 로그인
   const handleGoogleLogin = () => {
-    const kakaoAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}`;
-    window.location.href = kakaoAuthUrl;
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}`;
+    window.location.href = googleAuthUrl;
   };
 
   return (
@@ -174,7 +179,6 @@ export default function SignIn() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                autoFocus
                 required
                 fullWidth
                 variant="outlined"
@@ -186,12 +190,7 @@ export default function SignIn() {
               label="Remember me"
             />
             <ForgotPassword open={open} handleClose={handleClose} />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={validateInputs}
-            >
+            <Button type="submit" fullWidth variant="contained">
               Sign in
             </Button>
             <Link
@@ -209,16 +208,12 @@ export default function SignIn() {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => handleGoogleLogin()}
+              onClick={handleGoogleLogin}
               startIcon={<GoogleIcon />}
             >
               Sign in with Google
             </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => handleKakaoLogin()}
-            >
+            <Button fullWidth variant="outlined" onClick={handleKakaoLogin}>
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg"
                 alt="KakaoTalk Logo"
@@ -235,12 +230,6 @@ export default function SignIn() {
           </Box>
         </MuiCard>
       </Stack>
-
-      {/* <a 
-  // href="https://accounts.google.com/o/oauth2/v2/auth?client_id=175362941207-5utd0bap67slhe4o8511qjcacetb92fe.apps.googleusercontent.com&redirect_uri=http://localhost:3000/sign-in/google&response_type=code&scope=email profile">
-  구글 로그인
-</a> */}
-
-    </div> 
+    </div>
   );
 }
