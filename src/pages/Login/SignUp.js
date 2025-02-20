@@ -13,10 +13,10 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import Link from '@mui/material/Link';
-import { signUp } from '../../api/auth/authApi'; // axios function
+import { signUp } from '../../api/auth/authAPI'; // axios function
 import logo from '../../images/logo1.png';
 import { useNavigate } from 'react-router-dom'; // useNavigate
-import './SignUp.css'; // custom CSS 
+import './css/SignUp.css'; // custom CSS 
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
