@@ -29,7 +29,7 @@ function Header({ toggleSidebar }) { // 사이드바 토글 함수 받음
     setIsAuthenticated(false);
     setNickname("");
     alert("로그아웃되었습니다.");
-    window.location.reload();
+    window.location.href = "/"; // 메인 페이지로 이동
   };
 
   return (

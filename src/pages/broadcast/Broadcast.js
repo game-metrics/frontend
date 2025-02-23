@@ -20,11 +20,8 @@ function BroadCast() {
     // localStorage에서 nickname 가져오기
     const storedNickname = localStorage.getItem("nickname");
     setNickname(storedNickname || "익명"); // 없으면 기본값 '익명'
-    console.log(storedNickname);
 
-    let ws = new WebSocket(`${backendurl}/ws/chat`, [], {
-      withCredentials: false  // Tomcat 에서 에러 걸림. 쿠키 인증 정보 안 보냄
-    });
+    let ws = new WebSocket(`${backendurl}/ws/chat`);
 
     ws.onopen = () => {
       console.log("WebSocket 연결됨");
