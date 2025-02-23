@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {sendBroadcastData} from "../../api/broadcast/StreamAPI"
 
 export default function BroadcastSetup() {
   const [title, setTitle] = useState("");
@@ -6,13 +7,8 @@ export default function BroadcastSetup() {
   const [categoryId, setCategoryId] = useState(1);
 
   const handleStartBroadcast = () => {
-    const broadcastData = {
-      title,
-      thumbNailUrl,
-      categoryId: Number(categoryId),
-    };
-    console.log("방송 시작 데이터:", broadcastData);
-    // API 요청을 보낼 수 있습니다.
+  const data = sendBroadcastData(title,thumbNailUrl,categoryId);
+  console.log(data)
   };
 
   return (
