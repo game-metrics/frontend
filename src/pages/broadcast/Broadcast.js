@@ -10,13 +10,6 @@ function BroadCast() {
   const [nickname, setNickname] = useState(""); 
   const backendurl = process.env.REACT_APP_BACKEND_WS; // .env 파일에서 WebSocket 주소 가져오기
 
-  const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-    return null;
-  };
-
   useEffect(() => {
     console.log("Backend URL:", backendurl); // backendurl 값 확인
     if (!backendurl) {
