@@ -1,17 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginWithGoogle } from '../../../api/auth/authAPI';
+import { loginWithGoogle } from "../../../api/auth/authAPI";
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
-
-  // Set a cookie with secure options
-  const setCookie = (name, value, days) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;Secure;SameSite=Lax`;
-    console.log(`Cookie set: ${name}=${value}`);
-  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -19,10 +11,12 @@ const GoogleCallback = () => {
 
     if (code) {
       // spring 으로 전송
-      loginWithGoogle(code).then((response) => {
-          console.log("로그인 성공!"+response.data.data);
-          setCookie("auth", response.data.data.token, 1);
-          setCookie("nickname", response.data.data.nickname, 1);
+      loginWithGoogle(code)
+        .then((response) => {
+          console.log("로그인 성공!" + response.data.data);
+          // nickname을 localStorage에 저장
+          localStorage.setItem("nickname", response.data.data.nickname);
+          localStorage.setItem("auth", response.data.data.token); // 토큰도 localStorage에 저장
           navigate("/sign-in");
           window.location.reload();
         })

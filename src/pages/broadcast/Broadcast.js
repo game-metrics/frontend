@@ -23,13 +23,15 @@ function BroadCast() {
       console.error("WebSocket URL이 설정되지 않았습니다.");
       return;
     }
-    
-    const userNickname = String(getCookie("nickname") || "익명");
-    setNickname(userNickname);
-    console.log(userNickname);
-    console.log(nickname);
 
-    let ws = new WebSocket(`${backendurl}/ws/chat`); // 웹소켓 연결
+    // localStorage에서 nickname 가져오기
+    const storedNickname = localStorage.getItem("nickname");
+    setNickname(storedNickname || "익명"); // 없으면 기본값 '익명'
+    console.log(storedNickname);
+
+    let ws = new WebSocket(`${backendurl}/ws/chat`, [], {
+      withCredentials: false  // Tomcat 에서 에러 걸림. 쿠키 인증 정보 안 보냄
+    });
 
     ws.onopen = () => {
       console.log("WebSocket 연결됨");
@@ -37,8 +39,8 @@ function BroadCast() {
       const joinMessage = {
         type: "JOIN",
         roomId: roomId,
-        sender: userNickname,
-        message: `${userNickname} 님이 입장하셨습니다.`,
+        sender: storedNickname || "익명", // 닉네임 없으면 기본값 '익명'
+        message: `${storedNickname || "익명"} 님이 입장하셨습니다.`,
       };
 
       if (ws.readyState === WebSocket.OPEN) {

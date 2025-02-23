@@ -9,18 +9,11 @@ function Header({ toggleSidebar }) { // 사이드바 토글 함수 받음
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [nickname, setNickname] = useState("");
 
-  const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-    return null;
-  };
-
   useEffect(() => {
-    const token = getCookie("auth");
-    const userNickname = getCookie("nickname");
+    const token = localStorage.getItem("auth");
+    const userNickname = localStorage.getItem("nickname");
 
-    setIsAuthenticated(Boolean(token));
+    setIsAuthenticated(Boolean(token)); // token이 존재하면 인증된 상태로 설정
     if (userNickname) {
       setNickname(userNickname);
     }
@@ -31,8 +24,8 @@ function Header({ toggleSidebar }) { // 사이드바 토글 함수 받음
   };
 
   const handleLogout = () => {
-    document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "nickname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    localStorage.removeItem("auth");
+    localStorage.removeItem("nickname");
     setIsAuthenticated(false);
     setNickname("");
     alert("로그아웃되었습니다.");
