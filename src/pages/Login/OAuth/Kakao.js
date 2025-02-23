@@ -1,16 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {loginWithKakao} from '../../../api/auth/authAPI';
+import { loginWithKakao } from '../../../api/auth/authAPI';
 
 const KakaoCallback = () => {
   const navigate = useNavigate();
-
-    // Set a cookie with expiration 쿠키 만들기기
-    const setCookie = (name, value, days) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-    };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -20,8 +13,9 @@ const KakaoCallback = () => {
       loginWithKakao(code)
         .then((data) => {
           console.log(`로그인 성공!`);
-          setCookie("auth", data.token, 1); // Set auth cookie
-          setCookie("nickname", data.nickname, 1); // Set nickname cookie
+          // nickname을 localStorage에 저장
+          localStorage.setItem("auth", data.token); // 토큰을 localStorage에 저장
+          localStorage.setItem("nickname", data.nickname); // nickname을 localStorage에 저장
           navigate('/sign-in');
           window.location.reload();
         })

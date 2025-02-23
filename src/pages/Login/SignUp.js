@@ -175,10 +175,6 @@ export default function SignUp() {
           <Divider>
             <Typography>or</Typography>
           </Divider>
-          <Box>
-            <Button fullWidth variant="outlined">Sign up with Google</Button>
-            <Button fullWidth variant="outlined">Sign up with Facebook</Button>
-          </Box>
           <Typography>
             Already have an account?{' '}
             <Link href="/sign-in">Sign in</Link>

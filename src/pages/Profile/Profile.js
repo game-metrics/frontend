@@ -12,8 +12,16 @@ const Profile = () => {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const data = await fetchProfile();
-        setNickname(data.nickname);
+        // localStorage에서 nickname과 auth 가져오기
+        const storedNickname = localStorage.getItem("nickname");
+        const token = localStorage.getItem("auth");
+
+        if (storedNickname && token) {
+          setNickname(storedNickname);
+        }
+
+        // 프로필 정보 API 호출
+        const data = await fetchProfile(token);
         setEmail(data.email);
       } catch (error) {
         console.error("Error fetching user profile:", error);

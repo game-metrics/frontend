@@ -33,17 +33,9 @@ export default function SignIn() {
 
   const navigate = useNavigate();
 
-  // 쿠키 가져오기
-  const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-    return null;
-  };
-
-  // auth 쿠키가 있으면 메인 페이지로 이동
+  // auth 있으면 메인 페이지로 이동
   React.useEffect(() => {
-    const authToken = getCookie("auth");
+    const authToken = localStorage.getItem("auth");
     if (authToken) {
       console.log("Auth token exists, redirecting to main page.");
       navigate("/"); // Redirect to the main page
@@ -76,9 +68,10 @@ export default function SignIn() {
       const response = await signIn(userDetails); // 로그인 API 호출
       alert("Sign-in successful!");
 
-      // token과 nickname을 쿠키에 저장
-      setCookie("auth", response.token, 1);
-      setCookie("nickname", response.nickname, 1);
+      // token과 nickname을 localStorage에 저장
+      localStorage.setItem("auth", response.token);
+      localStorage.setItem("nickname", response.nickname);
+
 
       window.location.reload(); // 새로고침
     } catch (error) {
@@ -113,13 +106,6 @@ export default function SignIn() {
     }
 
     return isValid;
-  };
-
-  // 쿠키 설정 함수
-  const setCookie = (name, value, days) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
   };
 
   // 카카오 로그인
