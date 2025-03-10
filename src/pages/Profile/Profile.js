@@ -11,16 +11,20 @@ const Profile = () => {
 
   useEffect(() => {
     const loadProfile = async () => {
-      try {
-        // localStorage에서 nickname과 auth 가져오기
-        const storedNickname = localStorage.getItem("nickname");
-        const token = localStorage.getItem("auth");
+      const token = localStorage.getItem("auth");
 
-        if (storedNickname && token) {
+      if (!token) {
+        alert("로그인해주세요.");
+        window.location.href = "/";
+        return;
+      }
+
+      try {
+        const storedNickname = localStorage.getItem("nickname");
+        if (storedNickname) {
           setNickname(storedNickname);
         }
 
-        // 프로필 정보 API 호출
         const data = await fetchProfile(token);
         setEmail(data.email);
       } catch (error) {

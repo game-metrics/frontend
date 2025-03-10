@@ -43,7 +43,7 @@ function Home() {
     const cachedData = localStorage.getItem("listData");
     if (cachedData) {
       const category = listData.data.find((cat) => cat.id === id);
-      return category ? category.catagory : "카테고리 알 수 없음";
+      return category ? category.category : "카테고리 알 수 없음";
     }
     return "카테고리 알 수 없음";
   };
@@ -62,7 +62,7 @@ function Home() {
                   style={{ width: '300px', height: '200px' }}
                 />
                 <h2>{item.title}</h2>
-                <p>Category: {getCategoryNameById(item.catagoryId)}</p>
+                <p>Category: {getCategoryNameById(item.categoryId)}</p>
               </Link>
               <br />
             </div>

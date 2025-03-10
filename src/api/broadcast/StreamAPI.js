@@ -2,25 +2,27 @@ import axios from 'axios';
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const sendBroadcastData = async (title, url, categoryId) => {
-  const token = localStorage.getItem("auth"); // 로컬스토리지에서 'auth' 가져오기
+  const token = localStorage.getItem("auth"); // Get auth token
   if (!token) throw new Error("No auth token");
 
   const broadcastData = {
-    title: title,
+    title,
     thumbNailUrl: url,
-    categoryId: categoryId,  // Fixed typo from 'catagoryId' to 'categoryId'
+    categoryId,
   };
 
   try {
     const response = await axios.post(`${API_BASE_URL}/broadcasts`, broadcastData, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `${token}`, // Fixed header syntax
+        Authorization: `${token}`,
       },
     });
 
     console.log("Success:", response.data);
+    return response.data; // ✅ Returning response data
   } catch (error) {
     console.error("Request failed", error);
+    throw error; // ✅ Propagate error to be handled by caller
   }
 };
