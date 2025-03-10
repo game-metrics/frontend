@@ -6,10 +6,22 @@ export default function BroadcastSetup() {
   const [thumbNailUrl, setThumbNailUrl] = useState("");
   const [categoryId, setCategoryId] = useState(1);
 
-  const handleStartBroadcast = () => {
-  const data = sendBroadcastData(title,thumbNailUrl,categoryId);
-  console.log(data)
+  // 방송 생성 기능 creating broadcast 
+  const handleStartBroadcast = async () => {
+    try {
+      const data = await sendBroadcastData(title, thumbNailUrl, categoryId);
+      console.log(data.data.id);
+      
+      if (data?.data?.id) {
+        window.location.href = `http://localhost:3000/stream?id=${data.data.id}`;
+      } else {
+        console.error("Broadcast ID not found in response:", data.data.id);
+      }
+    } catch (error) {
+      console.error("Error starting broadcast:", error);
+    }
   };
+  
 
   return (
     <div style={{ maxWidth: "400px", margin: "20px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "8px", boxShadow: "2px 2px 10px rgba(0,0,0,0.1)" }}>
@@ -42,7 +54,7 @@ export default function BroadcastSetup() {
       {/* 썸네일 미리보기 */}
       {thumbNailUrl && (
         <div style={{ textAlign: "center", marginBottom: "10px" }}>
-          <img src={thumbNailUrl} alt="썸네일 미리보기" style={{ maxWidth: "100%", height: "auto", borderRadius: "5px", border: "1px solid #ddd" }} />
+          <img src={thumbNailUrl} alt="썸네일 미리보기" style={{ maxWidth: "100%  ", height: "auto", borderRadius: "5px", border: "1px solid #ddd" }} />
         </div>
       )}
 

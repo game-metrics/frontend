@@ -4,14 +4,14 @@ import KakaoCallback from "../pages/Login/OAuth/Kakao";
 import GoogleCallback from "../pages/Login/OAuth/Google";
 import Profile from "../pages/Profile/Profile";
 import SignUp from "../pages/Login/SignUp";
-import BroadCast from "../pages/broadcast/Broadcast";
-import Stream from "../pages/broadcast/StreamPage";
+import Broadcast from "../pages/broadcast/Broadcast";
+import StreamerPage from "../pages/broadcast/StreamPage";
 import BroadcastSetup from "../pages/broadcast/StreamSetup";
 
 const routes = [
   { path: "/", element: <Home /> },
-  { path: "/broadcast", element: <BroadCast /> },
-  { path: "/stream", element: <Stream /> },
+  { path: "/broadcast", element: <Broadcast /> },
+  { path: "/stream", element: <StreamerPage /> },
   { path: "/sign-in", element: <SignIn /> },
   { path: "/sign-in/kakao", element: <KakaoCallback /> },
   { path: "/sign-in/google", element: <GoogleCallback /> },

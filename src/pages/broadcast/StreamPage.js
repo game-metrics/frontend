@@ -1,59 +1,84 @@
-// import React, { useEffect, useRef, useState } from "react";
-// import './css/Broadcast.css'
+// import React, { useEffect, useRef, useState } from 'react';
 
-// function Stream() {
-//   const [stream, setStream] = useState(null);
-//   const videoRef = useRef(null);
+// const ChatWebSocket = ({ roomId, username }) => {
+//   const [messages, setMessages] = useState([]);
+//   const [input, setInput] = useState('');
+//   const ws = useRef(null);
 
 //   useEffect(() => {
-//     const getUserMedia = async () => {
-//         try {
-//           const userStream = await navigator.mediaDevices.getUserMedia({
-//             video: true,
-//             audio: true,
-//           });
-      
-//           setStream(userStream);
-//           if (videoRef.current) {
-//             videoRef.current.srcObject = userStream;
-//           }
-//         } catch (error) {
-//           if (error.name === "NotFoundError") {
-//             alert("No camera or microphone found.");
-//           } else {
-//             alert("Error accessing media devices", error);
-//           }
-//         }
-//       };
-      
+//     // WebSocket 연결
+//     ws.current = new WebSocket('ws://localhost:8080/ws'); // 포트와 주소는 서버 환경에 맞게 변경
 
-//     getUserMedia();
+//     // 연결이 열렸을 때
+//     ws.current.onopen = () => {
+//       console.log('✅ WebSocket 연결됨');
+
+//       // JOIN 메시지 전송
+//       const joinMessage = {
+//         type: 'JOIN',
+//         roomId: roomId,
+//         sender: username,
+//         message: `${username} 님이 입장하셨습니다.`,
+//       };
+//       ws.current.send(JSON.stringify(joinMessage));
+//     };
+
+//     // 서버로부터 메시지를 받았을 때
+//     ws.current.onmessage = (event) => {
+//       const data = JSON.parse(event.data);
+//       console.log('📩 수신된 메시지:', data);
+//       setMessages((prev) => [...prev, data]);
+//     };
+
+//     // 연결 종료 시
+//     ws.current.onclose = () => {
+//       console.log('❌ WebSocket 연결 종료');
+//     };
 
 //     return () => {
-//       if (stream) {
-//         stream.getTracks().forEach(track => track.stop());
+//       if (ws.current) {
+//         ws.current.close();
 //       }
 //     };
-//   }, []);
+//   }, [roomId, username]);
+
+//   const sendMessage = () => {
+//     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+//       const message = {
+//         type: 'TALK',
+//         roomId: roomId,
+//         sender: username,
+//         message: input,
+//       };
+//       ws.current.send(JSON.stringify(message));
+//       setInput('');
+//     }
+//   };
 
 //   return (
-//     <div className="container">
-//       <div className="chatBox">
-//         <h2 className="title">채팅</h2>
-//         {/* Chat content goes here */}
+//     <div className="p-4 border rounded-lg max-w-md mx-auto">
+//       <h2 className="text-xl font-bold mb-2">채팅방 #{roomId}</h2>
+//       <div className="h-60 overflow-y-auto border mb-2 p-2 bg-gray-100 rounded">
+//         {messages.map((msg, idx) => (
+//           <div key={idx} className="mb-1">
+//             <strong>{msg.sender}:</strong> {msg.message}
+//           </div>
+//         ))}
 //       </div>
-
-//       <div className="videoContainer">
-//         <h2 className="title">생방송</h2>
-//         <video
-//           ref={videoRef}
-//           autoPlay
-//           muted
-//           className="video"
+//       <div className="flex gap-2">
+//         <input
+//           className="flex-grow border p-1 rounded"
+//           type="text"
+//           value={input}
+//           onChange={(e) => setInput(e.target.value)}
+//           onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
 //         />
+//         <button className="bg-blue-500 text-white px-4 rounded" onClick={sendMessage}>
+//           전송
+//         </button>
 //       </div>
 //     </div>
 //   );
-// }
+// };
 
-// export default Stream;
+// export default ChatWebSocket;
