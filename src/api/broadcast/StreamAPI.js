@@ -26,4 +26,3 @@ export const sendBroadcastData = async (title, url, categoryId) => {
     throw error; // ✅ Propagate error to be handled by caller
   }
 };
-
