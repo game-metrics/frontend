@@ -22,3 +22,16 @@
 .data-item p{
     color: rgb(255, 30, 0);
 }
+
+.navbar-stream {
+    background: #222;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .live-video video {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
