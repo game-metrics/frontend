@@ -10,17 +10,16 @@ const Broadcast = () => {
   const [ws, setWs] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
+  const [retryCount, setRetryCount] = useState(0);
+  const [streamFailed, setStreamFailed] = useState(false);
+
   const videoRef = useRef(null);
   const messageEndRef = useRef(null);
 
-  // 방송 받기 주소
-  const hlsurl =  process.env.REACT_APP_HLS;
-
-  console.log(hlsurl);
-
+  const hlsurl = process.env.REACT_APP_HLS;
   const roomId = params.get('id');
   const nickname = localStorage.getItem('nickname') || '익명';
-  const streamUrl = hlsurl+"/"+roomId+".m3u8"; // HLS 스트림 URL
+  const streamUrl = `${hlsurl}/${roomId}.m3u8`;
 
   // 🔹 WebSocket 연결 설정
   useEffect(() => {
@@ -30,9 +29,7 @@ const Broadcast = () => {
     setWs(socket);
 
     return () => {
-      if (socket) {
-        socket.close();
-      }
+      if (socket) socket.close();
     };
   }, [roomId, nickname]);
 
@@ -43,30 +40,56 @@ const Broadcast = () => {
     }
   }, [messages]);
 
-  // 🔹 HLS.js로 비디오 스트리밍 설정
+  // 🔹 HLS.js로 비디오 스트리밍 설정 (5회까지 시도)
   useEffect(() => {
     let hls;
 
-    if (videoRef.current) {
-      if (Hls.isSupported()) {
-        hls = new Hls();
-        hls.loadSource(streamUrl);
-        hls.attachMedia(videoRef.current);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          videoRef.current.play();
-        });
-      } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-        videoRef.current.src = streamUrl;
-        videoRef.current.addEventListener('loadedmetadata', () => {
-          videoRef.current.play();
-        });
+    const tryLoadStream = (attempt = 1) => {
+      if (attempt > 5) {
+        // 실패 처리
+        setStreamFailed(true);
+        setMessages(prev => [
+          ...prev,
+          { sender: '시스템', message: '⚠️ 방송 송출이 종료되었습니다.' }
+        ]);
+        return;
       }
-    }
+
+      if (videoRef.current) {
+        if (Hls.isSupported()) {
+          hls = new Hls();
+          hls.loadSource(streamUrl);
+          hls.attachMedia(videoRef.current);
+
+          hls.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+              hls.destroy();
+              setTimeout(() => tryLoadStream(attempt + 1), 2000); // 2초 후 재시도
+              setRetryCount(attempt);
+            }
+          });
+
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            videoRef.current.play().catch(err => {
+              console.error('자동 재생 실패:', err);
+            });
+          });
+
+        } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+          videoRef.current.src = streamUrl;
+          videoRef.current.addEventListener('loadedmetadata', () => {
+            videoRef.current.play().catch(err => {
+              console.error('자동 재생 실패:', err);
+            });
+          });
+        }
+      }
+    };
+
+    tryLoadStream();
 
     return () => {
-      if (hls) {
-        hls.destroy();
-      }
+      if (hls) hls.destroy();
     };
   }, [streamUrl]);
 
@@ -96,6 +119,11 @@ const Broadcast = () => {
       {/* 왼쪽: 비디오 */}
       <div className='video_container'>
         <video ref={videoRef} controls autoPlay width="100%" height="100%" />
+        {streamFailed && (
+          <div className="stream_error">
+            ❌ 방송 송출이 종료되었습니다.
+          </div>
+        )}
       </div>
 
       {/* 오른쪽: 채팅 */}
