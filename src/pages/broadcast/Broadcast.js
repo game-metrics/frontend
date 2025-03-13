@@ -13,9 +13,14 @@ const Broadcast = () => {
   const videoRef = useRef(null);
   const messageEndRef = useRef(null);
 
+  // 방송 받기 주소
+  const hlsurl =  process.env.REACT_APP_HLS;
+
+  console.log(hlsurl);
+
   const roomId = params.get('id');
   const nickname = localStorage.getItem('nickname') || '익명';
-  const streamUrl = "http://52.78.97.122/hls/222.m3u8"; // HLS 스트림 URL
+  const streamUrl = hlsurl+"/"+roomId+".m3u8"; // HLS 스트림 URL
 
   // 🔹 WebSocket 연결 설정
   useEffect(() => {
