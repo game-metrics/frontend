@@ -21,24 +21,50 @@ export const initWebSocket = (roomId, nickname, setMessages) => {
       setInputMessage('');
     }
   };
-  
-  // 🔹 방송 종료 API 
+
+// 방송 시작 PATCH 요청
+export const startBroadcast = async (roomId, token) => {
+  try {
+    const response = await fetch(API_BASE_URL+'/broadcasts/on', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify({ broadcastId: roomId }),
+    });
+
+    if (!response.ok) throw new Error('방송 시작 PATCH 실패');
+
+    const data = await response.json();
+    console.log('✅ 방송 상태 업데이트 성공:', data);
+    return data;
+  } catch (error) {
+    console.error('⚠️ 방송 상태 업데이트 실패:', error);
+    throw error;
+  }
+};
+
+// 방송 종료 API
 export const endBroadcast = async (roomId, token, navigate) => {
-    if (!token) {
-      alert('인증 정보가 없습니다. 다시 로그인해주세요.');
-      navigate('/');
-      return;
-    }
-  
+  try {
+    const response = await fetch(API_BASE_URL+`/broadcasts/off`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify({ broadcastId: roomId }),
+    });
+
+    if (!response.ok) throw new Error('방송 종료 PATCH 실패');
+
+    const data = await response.json();
+    console.log('🛑 방송 종료 성공:', data);
+    alert('방송이 종료되었습니다.');
     navigate('/');
-  
-    try {
-      await axios.patch(
-        `${API_BASE_URL}/streamers`, // 🔹 API 엔드포인트 변경
-        { streamId: Number(roomId) },
-        { headers: { Authorization: token, 'Content-Type': 'application/json' } }
-      );
-    } catch (error) {
-      console.error('방송 종료 오류:', error);
-    }
-  };
+  } catch (err) {
+    console.error('🛑 방송 종료 실패:', err);
+    alert('방송 종료 중 문제가 발생했습니다.');
+  }
+};
