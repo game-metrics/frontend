@@ -1,10 +1,12 @@
-import { initWebSocket } from '../../api/broadcast/BroadcastAPI';
+import { initWebSocket, endBroadcast } from '../../api/broadcast/StreamerAPI';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
-import axios from 'axios';
 
 import './css/Broadcast.css';
+
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_WS = process.env.REACT_APP_BACKEND_WS;
 
 const StreamerPage = () => {
   const [params] = useSearchParams();
@@ -15,16 +17,16 @@ const StreamerPage = () => {
   const videoRef = useRef(null);
   const messageEndRef = useRef(null);
 
-  const hlsurl =  process.env.REACT_APP_HLS;
-  const rtmpurl =  process.env.REACT_APP_RTMP;
+  const hlsurl = process.env.REACT_APP_HLS;
+  const rtmpurl = process.env.REACT_APP_RTMP;
 
   const roomId = params.get('id');
   const nickname = localStorage.getItem('nickname') || '익명';
   const token = localStorage.getItem('auth'); // 🔹 인증 토큰 가져오기
-  const streamUrl = hlsurl+`/${roomId}.m3u8`;
+  const streamUrl = `${hlsurl}/${roomId}.m3u8`;
   const rtmpUrl = rtmpurl;
-  
-  // 🔹 🔥 토큰 없으면 로그인 페이지로 이동
+
+  // 🔹 토큰 없으면 로그인 페이지로 이동
   useEffect(() => {
     if (!token) {
       alert('로그인 해주십쇼');
@@ -103,33 +105,6 @@ const StreamerPage = () => {
     }
   };
 
-  // 🔹 방송 종료 함수 (홈으로 즉시 이동)
-  const endBroadcast = async () => {
-    if (!token) {
-      alert('인증 정보가 없습니다. 다시 로그인해주세요.');
-      navigate('/'); // 🔹 바로 홈으로 이동
-      return;
-    }
-
-    // 🔹 먼저 홈으로 이동
-    navigate('/');
-
-    try {
-      await axios.patch(
-        'http://localhost:8080/broadcasts',
-        { broadcastId: Number(roomId) },
-        {
-          headers: {
-            Authorization: token, // 🔹 Bearer 제거
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-    } catch (error) {
-      console.error('방송 종료 오류:', error);
-    }
-  };
-
   return (
     <div className='broadcast'>
       {/* 비디오 & OBS 설정 포함 */}
@@ -163,17 +138,22 @@ const StreamerPage = () => {
           </a>
           <p>
             <a
-              href='https://support.obsproject.com'
               target='_blank'
               rel='noopener noreferrer'
-              style={{ color: '#28a745', textDecoration: 'underline' }}
+              style={{ color: '#28a745' }}
             >
               📘 OBS 사용법 가이드
+              <br />
+              1. OBS 설치 및 열기<br />
+              2. 파일 - 설정 - 방송 <br />
+              3. 서비스: 사용자 지정 선택<br />
+              4. 서버 칸에 방송 URL, 스트림 키 칸에 스트림 키 입력<br />
+              5. 방송 시작 확인
             </a>
           </p>
 
           {/* 🛑 방송 종료 버튼 추가 */}
-          <button onClick={endBroadcast} className='end_broadcast_btn' style={{ marginTop: '15px' }}>
+          <button onClick={() => endBroadcast(roomId, token, navigate)} className='end_broadcast_btn' style={{ marginTop: '15px' }}>
             🛑 방송 종료
           </button>
         </div>
