@@ -1,13 +1,12 @@
 import axios from 'axios';
 
-
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const API_BASE_WS = process.env.REACT_APP_BACKEND_WS;
 
-// Fetch broadcasts
+// 방송 목록 가져오기
 export const fetchBroadcasts = async () => {
   try {
-    const response = await axios.get(API_BASE_URL+'/broadcasts?page=0&size=5');
+    const response = await axios.get(`${API_BASE_URL}/broadcasts?page=0&size=5`);
     return response.data.data.content; 
   } catch (error) {
     console.error("Error fetching broadcasts:", error);
@@ -15,10 +14,10 @@ export const fetchBroadcasts = async () => {
   }
 };
 
-// Fetch categories
+// 카테고리 목록 가져오기
 export const fetchCategories = async () => {
   try {
-    const response = await axios.get(API_BASE_URL+'/category');
+    const response = await axios.get(`${API_BASE_URL}/category`);
     return response.data;
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -26,10 +25,9 @@ export const fetchCategories = async () => {
   }
 };
 
-
-// connection websock chat
+// WebSocket 채팅 연결
 export const initWebSocket = (roomId, nickname, setMessages) => {
-  const socket = new WebSocket(API_BASE_WS+'/ws');
+  const socket = new WebSocket(`${API_BASE_WS}/ws`);
 
   socket.onopen = () => {
     const joinMessage = {
@@ -52,3 +50,4 @@ export const initWebSocket = (roomId, nickname, setMessages) => {
 
   return socket;
 };
+
