@@ -44,7 +44,7 @@ const Broadcast = () => {
   useEffect(() => {
     let hls;
 
-    const tryLoadStream = (attempt = 1) => {
+    const tryLoadStream = async (attempt = 1) => {
       if (attempt > 5) {
         // 실패 처리
         setStreamFailed(true);
@@ -52,6 +52,15 @@ const Broadcast = () => {
           ...prev,
           { sender: '시스템', message: '⚠️ 방송 송출이 종료되었습니다.' }
         ]);
+
+        // 🔸 방송 종료 확인 신호 전송
+        try {
+          await fetch(`http://localhost:8080/broadcasts/confirm?broadcastId=${roomId}`);
+          console.log('✅ 방송 확인 요청 완료');
+        } catch (err) {
+          console.error('❌ 방송 확인 요청 실패:', err);
+        }
+
         return;
       }
 
