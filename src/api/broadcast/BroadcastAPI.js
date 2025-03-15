@@ -52,3 +52,14 @@ export const initWebSocket = (roomId, nickname, setMessages) => {
 
   return socket;
 };
+
+
+// connection websock chat
+export const confirmBroadcast = (roomId) => {
+  try {
+    fetch(API_BASE_URL+`/broadcasts/confirm?broadcastId=${roomId}`);
+    console.log('✅ 방송 확인 요청 완료');
+  } catch (err) {
+    console.error('❌ 방송 확인 요청 실패:', err);
+  }
+};

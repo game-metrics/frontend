@@ -1,4 +1,4 @@
-import { initWebSocket } from '../../api/broadcast/BroadcastAPI';
+import { initWebSocket,confirmBroadcast } from '../../api/broadcast/BroadcastAPI';
 import { useSearchParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
@@ -54,12 +54,7 @@ const Broadcast = () => {
         ]);
 
         // 🔸 방송 종료 확인 신호 전송
-        try {
-          await fetch(`http://localhost:8080/broadcasts/confirm?broadcastId=${roomId}`);
-          console.log('✅ 방송 확인 요청 완료');
-        } catch (err) {
-          console.error('❌ 방송 확인 요청 실패:', err);
-        }
+        await confirmBroadcast(roomId);
 
         return;
       }
