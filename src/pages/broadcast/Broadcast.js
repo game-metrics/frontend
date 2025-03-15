@@ -1,4 +1,4 @@
-import { initWebSocket } from '../../api/broadcast/BroadcastAPI';
+import { initWebSocket,confirmBroadcast } from '../../api/broadcast/BroadcastAPI';
 import { useSearchParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
@@ -44,7 +44,8 @@ const Broadcast = () => {
   useEffect(() => {
     let hls;
 
-    const tryLoadStream = (attempt = 1) => {
+    const tryLoadStream = async (attempt = 1) => {
+
       if (attempt > 5) {
         // 실패 처리
         setStreamFailed(true);
@@ -52,6 +53,10 @@ const Broadcast = () => {
           ...prev,
           { sender: '시스템', message: '⚠️ 방송 송출이 종료되었습니다.' }
         ]);
+
+        // 🔸 방송 종료 확인 신호 전송
+        await confirmBroadcast(roomId);
+
         return;
       }
 
