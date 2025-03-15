@@ -44,11 +44,8 @@ const Broadcast = () => {
   useEffect(() => {
     let hls;
 
-<<<<<<< HEAD
     const tryLoadStream = async (attempt = 1) => {
-=======
-    const tryLoadStream = (attempt = 1) => {
->>>>>>> a3233a65e061c734f66caed58b3b89be02e8c8eb
+
       if (attempt > 5) {
         // 실패 처리
         setStreamFailed(true);
@@ -56,13 +53,10 @@ const Broadcast = () => {
           ...prev,
           { sender: '시스템', message: '⚠️ 방송 송출이 종료되었습니다.' }
         ]);
-<<<<<<< HEAD
 
         // 🔸 방송 종료 확인 신호 전송
         await confirmBroadcast(roomId);
 
-=======
->>>>>>> a3233a65e061c734f66caed58b3b89be02e8c8eb
         return;
       }
 
