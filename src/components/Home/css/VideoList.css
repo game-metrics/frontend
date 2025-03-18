@@ -1,0 +1,35 @@
+.video-list-container {
+    padding: 20px;
+  }
+  
+  .video-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .video-item {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    width: 300px;
+  }
+  
+  .pagination {
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    margin: 0 5px;
+    padding: 6px 12px;
+    border: none;
+    background-color: #eee;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .pagination button.active {
+    background-color: #007bff;
+    color: white;
+  }
+  

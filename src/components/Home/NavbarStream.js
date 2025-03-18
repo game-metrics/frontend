@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchBroadcasts } from '../../api/broadcast/BroadcastAPI';
 
-import "./css/Home.css";
-
 function NavbarStream() {
   const [liveStream, setLiveStream] = useState(null);
 

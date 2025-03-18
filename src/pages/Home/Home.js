@@ -1,6 +1,7 @@
 import React from 'react';
-import StreamList from './StreamList.js';
-import NavbarStream from './NavbarStream.js';
+import StreamList from '../../components/Home/StreamList.js';
+import NavbarStream from '../../components/Home/NavbarStream.js';
+import VideoList from '../../components/Home/VideoList.js';
 import "./css/Home.css";
 
 function Home() {
@@ -8,6 +9,7 @@ function Home() {
     <div className="home">
       <NavbarStream />
       <StreamList />
+      <VideoList/>
     </div>
   );
 }
