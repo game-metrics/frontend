@@ -7,6 +7,7 @@ import SignUp from "../pages/Login/SignUp";
 import Broadcast from "../pages/broadcast/Broadcast";
 import StreamerPage from "../pages/broadcast/StreamPage";
 import BroadcastSetup from "../pages/broadcast/StreamSetup";
+import VideoWatchPage from "../pages/video/VideoWatchPage";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -18,6 +19,7 @@ const routes = [
   { path: "/broadcast-setup", element: <BroadcastSetup /> },
   { path: "/sign-up", element: <SignUp /> },
   { path: "/profile", element: <Profile /> },
+  { path: "/watch", element: <VideoWatchPage /> },
 ];
 
 export default routes;

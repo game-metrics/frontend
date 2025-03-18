@@ -1,14 +1,11 @@
-// src/api/VideoAPI.js
 import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const fetchVideos = async (page = 0, size = 4) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}?page=${page}&size=${size}`);
+    const response = await axios.get(`${API_BASE_URL}/videos?page=${page}&size=${size}`);
     const data = response.data.data;
-    console.log(data)
-    // Optional: check structure
     return {
       content: data?.content || [],
       totalPages: data?.totalPages || 0,
@@ -21,3 +18,5 @@ export const fetchVideos = async (page = 0, size = 4) => {
     };
   }
 };
+
+// video 하나 가져오기 기능.

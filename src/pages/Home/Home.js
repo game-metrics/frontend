@@ -8,7 +8,9 @@ function Home() {
   return (
     <div className="home">
       <NavbarStream />
+      <h1>Stream List</h1>
       <StreamList />
+      <h1>Video List</h1>
       <VideoList/>
     </div>
   );
