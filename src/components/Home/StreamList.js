@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { fetchBroadcasts, fetchCategories } from '../../api/broadcast/BroadcastAPI';
 import { Link } from 'react-router-dom';
 
-import "./css/Home.css";
 import noThumbnail from '../../images/nothumnail.png';
 
 function StreamList() {

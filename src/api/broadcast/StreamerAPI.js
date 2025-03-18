@@ -1,19 +1,32 @@
-import axios from 'axios';
+
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const API_BASE_WS = process.env.REACT_APP_BACKEND_WS;
 
+// connection websock chat
 export const initWebSocket = (roomId, nickname, setMessages) => {
-    const socket = new WebSocket(API_BASE_WS+`/chat?roomId=${roomId}&nickname=${nickname}`);
-  
-    socket.onmessage = (event) => {
-      const newMessage = JSON.parse(event.data);
-      setMessages((prev) => [...prev, newMessage]);
+  const socket = new WebSocket(API_BASE_WS+'/ws');
+
+  socket.onopen = () => {
+    const joinMessage = {
+      type: 'JOIN',
+      roomId,
+      sender: nickname,
+      message: `${nickname} 입장`,
     };
-  
-    socket.onclose = () => console.log('WebSocket closed');
-  
-    return socket;
+    socket.send(JSON.stringify(joinMessage));
   };
+
+  socket.onmessage = (event) => {
+    const newMessage = JSON.parse(event.data);
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
+  socket.onclose = () => {
+    console.log('WebSocket closed');
+  };
+
+  return socket;
+};
   
   export const sendMessage = (ws, roomId, nickname, message, setInputMessage) => {
     if (ws && message.trim()) {

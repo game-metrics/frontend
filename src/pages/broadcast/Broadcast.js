@@ -46,7 +46,7 @@ const Broadcast = () => {
 
     const tryLoadStream = async (attempt = 1) => {
 
-      if (attempt > 5) {
+      if (attempt > 3) {
         // 실패 처리
         setStreamFailed(true);
         setMessages(prev => [
