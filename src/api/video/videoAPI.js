@@ -1,7 +1,7 @@
 // src/api/VideoAPI.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/videos';
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const fetchVideos = async (page = 0, size = 4) => {
   try {
