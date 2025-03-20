@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { uploadVideo, uploadVideoS3 } from "../../api/video/videoAPI";
 
 const UploadVideo = () => {
@@ -10,6 +10,15 @@ const UploadVideo = () => {
   const [videoFile, setVideoFile] = useState(null);
   const [message, setMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+
+  // Check if the user is authenticated when the component is mounted
+  useEffect(() => {
+    const auth = localStorage.getItem("auth");
+    if (!auth) {
+      alert("권한이 없습니다. 로그인해주세요.");
+      window.location.href = "/";  // Redirect to the main page
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,20 +40,25 @@ const UploadVideo = () => {
       setIsUploading(true);
       setMessage("업로드 중...");
 
-      // 👉 S3 업로드
+      // S3 upload
       const videoUpload = await uploadVideoS3({ file: videoFile });
-    
       console.log(videoUpload);
-      // 👉 서버 업로드 - thumbNailUrl 없이 빈 문자열 전달
+
+      // Server upload - pass an empty string for thumbNailUrl
       const uploadResult = await uploadVideo({
         title: formData.title,
         thumbNailUrl: "",
-        videoUrl: videoUpload
+        videoUrl: videoUpload,
       });
 
       setMessage("업로드 성공!");
       setFormData({ title: "", videoUrl: "" });
       setVideoFile(null);
+
+      // Show alert and redirect to the main page
+      alert("비디오 업로드가 완료되었습니다!");
+      window.location.href = "/";  // Redirect to the main page
+
     } catch (error) {
       console.error(error);
       setMessage("업로드 실패. 콘솔을 확인해주세요.");

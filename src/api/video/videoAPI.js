@@ -26,7 +26,7 @@ export const fetchVideos = async (page = 0, size = 4) => {
   }
 };
 
-// 📦 [GET] Fetch a single video by ID
+// Fetch a single video by ID
 export const fetchVideoById = async (videoId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/videos/${videoId}`);
@@ -37,7 +37,7 @@ export const fetchVideoById = async (videoId) => {
   }
 };
 
-// 📥 [POST] 영상 비디오 파일 S3 업로드
+// 영상 비디오 파일 S3 업로드
 export const uploadVideoS3 = async ({ file }) => {
   try {
     const formData = new FormData();
@@ -61,7 +61,7 @@ export const uploadVideoS3 = async ({ file }) => {
   }
 };
 
-// 📦 [POST] 최종 서버 등록 (title + s3 url들)
+// 최종 서버 등록 (title + s3 url들)
 export const uploadVideo = async ({ title, thumbNailUrl, videoUrl }) => {
   try {
     console.log(videoUrl);
