@@ -7,7 +7,7 @@ const API_BASE_WS = process.env.REACT_APP_BACKEND_WS;
 // Fetch broadcasts
 export const fetchBroadcasts = async () => {
   try {
-    const response = await axios.get(API_BASE_URL+'/broadcasts?page=0&size=5');
+    const response = await axios.get(API_BASE_URL+'/broadcasts?page=0&size=4');
     return response.data.data.content; 
   } catch (error) {
     console.error("Error fetching broadcasts:", error);

@@ -4,7 +4,7 @@ import logo from "../../images/logo1.png";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu"; // 메뉴 아이콘 추가
 
-function Header({ toggleSidebar }) { // 사이드바 토글 함수 받음
+function Header({ toggleSidebar }) {
   const [logoError, setLogoError] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [nickname, setNickname] = useState("");
@@ -13,7 +13,7 @@ function Header({ toggleSidebar }) { // 사이드바 토글 함수 받음
     const token = localStorage.getItem("auth");
     const userNickname = localStorage.getItem("nickname");
 
-    setIsAuthenticated(Boolean(token)); // token이 존재하면 인증된 상태로 설정
+    setIsAuthenticated(Boolean(token));
     if (userNickname) {
       setNickname(userNickname);
     }
@@ -29,7 +29,7 @@ function Header({ toggleSidebar }) { // 사이드바 토글 함수 받음
     setIsAuthenticated(false);
     setNickname("");
     alert("로그아웃되었습니다.");
-    window.location.href = "/"; // 메인 페이지로 이동
+    window.location.href = "/";
   };
 
   return (
@@ -61,27 +61,34 @@ function Header({ toggleSidebar }) { // 사이드바 토글 함수 받음
           </a>
         ) : (
           <div className="header__option" onClick={handleLogout} style={{ cursor: "pointer" }}>
-            <span className="header__optionLineOne">{nickname ? `${nickname}` : "Hello"}</span>
+            <span className="header__optionLineOne">{nickname || "Hello"}</span>
             <span className="header__optionLineTwo">Log Out</span>
           </div>
         )}
 
         {isAuthenticated && (
-          <a href="/broadcast-setup">
-            <div className="header__option">
-              <span className="header__optionLineOne">Start</span>
-              <span className="header__optionLineTwo">BroadCast</span>
-            </div>
-          </a>
-        )}
-
-        {isAuthenticated && (
-          <a href="/profile">
-            <div className="header__option">
-              <span className="header__optionLineOne">Your</span>
-              <span className="header__optionLineTwo">Profile</span>
-            </div>
-          </a>
+          <>
+            <a href="/broadcast-setup">
+              <div className="header__option">
+                <span className="header__optionLineOne">Start</span>
+                <span className="header__optionLineTwo">BroadCast</span>
+              </div>
+            </a>
+            
+            <a href="/upload-video">
+              <div className="header__option">
+                <span className="header__optionLineOne">Upload</span>
+                <span className="header__optionLineTwo">Video</span>
+              </div>
+            </a>
+    
+            <a href="/profile">
+              <div className="header__option">
+                <span className="header__optionLineOne">Your</span>
+                <span className="header__optionLineTwo">Profile</span>
+              </div>
+            </a>
+          </>
         )}
       </div>
     </div>
