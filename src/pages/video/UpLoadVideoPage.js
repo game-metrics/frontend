@@ -1,22 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { uploadVideo, uploadVideoS3 } from "../../api/video/videoAPI";
+import "./UploadVideo.css";
+
+// 썸네일 추출 함수
+const extractThumbnail = (file, seekTo = 5) => {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.src = URL.createObjectURL(file);
+    video.muted = true;
+    video.playsInline = true;
+    video.crossOrigin = "anonymous";
+
+    video.onloadedmetadata = () => {
+      const seekTime = Math.min(seekTo, video.duration);
+      video.currentTime = seekTime;
+    };
+
+    video.onseeked = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(
+        (blob) => {
+          const previewUrl = URL.createObjectURL(blob);
+          resolve({ blob, previewUrl });
+        },
+        "image/jpeg",
+        0.95
+      );
+    };
+
+    video.onerror = (e) => {
+      reject("썸네일 추출 실패", e);
+    };
+  });
+};
 
 const UploadVideo = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    videoUrl: "",
-  });
-
+  const [formData, setFormData] = useState({ title: "", videoUrl: "" });
   const [videoFile, setVideoFile] = useState(null);
+  const [thumbnailBlob, setThumbnailBlob] = useState(null);
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState(null);
   const [message, setMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
-  // Check if the user is authenticated when the component is mounted
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth) {
       alert("권한이 없습니다. 로그인해주세요.");
-      window.location.href = "/";  // Redirect to the main page
+      window.location.href = "/";
     }
   }, []);
 
@@ -24,8 +60,18 @@ const UploadVideo = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleVideoChange = (e) => {
-    setVideoFile(e.target.files[0]);
+  const handleVideoChange = async (e) => {
+    const file = e.target.files[0];
+    setVideoFile(file);
+
+    try {
+      const { blob, previewUrl } = await extractThumbnail(file, 5);
+      setThumbnailBlob(blob);
+      setThumbnailPreviewUrl(previewUrl);
+    } catch (error) {
+      console.error(error);
+      setMessage("썸네일 추출 실패");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -40,25 +86,27 @@ const UploadVideo = () => {
       setIsUploading(true);
       setMessage("업로드 중...");
 
-      // S3 upload
-      const videoUpload = await uploadVideoS3({ file: videoFile });
-      console.log(videoUpload);
+      const videoUrl = await uploadVideoS3({ file: videoFile });
+      let thumbUrl = "";
 
-      // Server upload - pass an empty string for thumbNailUrl
-      const uploadResult = await uploadVideo({
+      if (thumbnailBlob) {
+        thumbUrl = await uploadVideoS3({ file: thumbnailBlob });
+      }
+
+      await uploadVideo({
         title: formData.title,
-        thumbNailUrl: "",
-        videoUrl: videoUpload,
+        thumbNailUrl: thumbUrl,
+        videoUrl: videoUrl,
       });
 
       setMessage("업로드 성공!");
       setFormData({ title: "", videoUrl: "" });
       setVideoFile(null);
+      setThumbnailBlob(null);
+      setThumbnailPreviewUrl(null);
 
-      // Show alert and redirect to the main page
       alert("비디오 업로드가 완료되었습니다!");
-      window.location.href = "/";  // Redirect to the main page
-
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
       setMessage("업로드 실패. 콘솔을 확인해주세요.");
@@ -68,42 +116,49 @@ const UploadVideo = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-2xl shadow-lg bg-white">
-      <h2 className="text-2xl font-bold mb-4">Upload Video</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="upload-video-container">
+      <h2 className="upload-video-title">Upload Video</h2>
+      <form onSubmit={handleSubmit} className="upload-video-form">
         <div>
-          <label className="block text-sm font-semibold mb-1">Title</label>
+          <label className="upload-video-label">Title</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
+            className="upload-video-input"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold mb-1">Video File</label>
+          <label className="upload-video-label">Video File</label>
           <input
             type="file"
             accept="video/*"
             onChange={handleVideoChange}
-            className="w-full p-2 border rounded-lg"
+            className="upload-video-input"
             required
           />
         </div>
 
+        {thumbnailPreviewUrl && (
+          <div className="upload-video-thumbnail-preview">
+            <label className="upload-video-label">Thumbnail Preview</label>
+            <img src={thumbnailPreviewUrl} alt="Thumbnail Preview" className="upload-video-thumbnail-img" />
+          </div>
+        )}
+
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+          className="upload-video-button"
           disabled={isUploading}
         >
           {isUploading ? "Uploading..." : "Upload"}
         </button>
       </form>
 
-      {message && <p className="mt-4 text-center text-sm text-gray-700">{message}</p>}
+      {message && <p className="upload-video-message">{message}</p>}
     </div>
   );
 };
