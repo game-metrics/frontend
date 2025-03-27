@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendBroadcastData } from "../../api/broadcast/StreamAPI";
+import { sendBroadcastData, uploadImageToS3 } from "../../api/broadcast/StreamAPI";
 
 export default function BroadcastSetup() {
   const navigate = useNavigate();
@@ -23,35 +23,6 @@ export default function BroadcastSetup() {
     setFile(e.target.files[0]);
   };
 
-  const uploadImageToS3 = async () => {
-    if (!file) {
-      console.log("썸네일 없이 방송을 시작합니다.");
-      return null;
-    }
-
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch("http://localhost:8080/s3/image", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("이미지 업로드 실패");
-      }
-
-      const data = await response.json();
-      setIsUploading(false);
-      return data.url;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      setIsUploading(false);
-      return null;
-    }
-  };
 
   const handleStartBroadcast = async () => {
     const uploadedImageUrl = await uploadImageToS3();

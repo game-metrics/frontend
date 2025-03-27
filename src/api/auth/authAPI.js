@@ -8,6 +8,7 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL; // backend url
  * @returns {Promise} - Axios response Promise.
  */
 export const signUp = async (userDetails) => {
+  console.log("Sign-in data:", userDetails);
   try {
     const response = await axios.post(`${API_BASE_URL}/users`, userDetails, {
       headers: {
@@ -21,8 +22,9 @@ export const signUp = async (userDetails) => {
 };
 
 export const signIn = async (userDetails) => {
+  console.log("Sign-in data:", userDetails);
   try {
-    const response = await axios.post(`${API_BASE_URL}/users/login`, userDetails, {
+    const response = await axios.post(`${API_BASE_URL}/users/login`, JSON.stringify(userDetails), {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -35,6 +37,7 @@ export const signIn = async (userDetails) => {
 
 // OAuth Kakao
 export const loginWithKakao = async (code) => {
+  console.log("Sign-in data:", code);
   try {
     const response = await axios.post(`${API_BASE_URL}/users/login/kakao`, { code });
     return response.data.data; // 서버에서 반환된 이메일
@@ -46,6 +49,7 @@ export const loginWithKakao = async (code) => {
 
 // OAuth Google
 export const loginWithGoogle = async (code) => {
+  console.log("Sign-in data:", code);
   try {
     const response = await axios.post(`${API_BASE_URL}/users/login/google`, { code });
     return response; // 서버에서 반환된 이메일
