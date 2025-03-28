@@ -36,7 +36,7 @@ export const uploadImageToS3 = async (file) => {
 };
 
 /**
- * 방송 데이터 전송 (썸네일 업로드 포함)
+ * 
  * @param {string} title - 방송 제목
  * @param {File | null} file - 업로드할 썸네일 파일 (옵션)
  * @param {number} categoryId - 방송 카테고리 ID
