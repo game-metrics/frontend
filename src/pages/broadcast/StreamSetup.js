@@ -5,16 +5,16 @@ import { sendBroadcastData, uploadImageToS3 } from "../../api/broadcast/StreamAP
 export default function BroadcastSetup() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
-  const [thumbNailUrl] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [categoryId, setCategoryId] = useState(1);
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  // 🔹 🔥 인증 확인 (토큰 없으면 홈으로 이동)
+  // 🔹 🔥 Check authentication (redirect to home if no token)
   useEffect(() => {
     const token = localStorage.getItem("auth");
     if (!token) {
-      alert("인증 정보가 없습니다. 다시 로그인해주세요.");
+      alert("No authentication info found. Please log in again.");
       navigate("/");
     }
   }, [navigate]);
@@ -23,16 +23,28 @@ export default function BroadcastSetup() {
     setFile(e.target.files[0]);
   };
 
-
   const handleStartBroadcast = async () => {
-    const uploadedImageUrl = await uploadImageToS3();
+    if (!title) {
+      alert("Please enter a broadcast title.");
+      return;
+    }
+    
+    let uploadedImageUrl = "";
+    if (file) {
+      setIsUploading(true);
+      uploadedImageUrl = await uploadImageToS3(file);
+      setIsUploading(false);
+      if (!uploadedImageUrl) {
+        alert("Failed to upload the thumbnail.");
+        return;
+      }
+      setThumbnailUrl(uploadedImageUrl);
+    }
 
     try {
       const data = await sendBroadcastData(title, uploadedImageUrl, categoryId);
-
-      if (data?.data?.id) {
-        const broadcastId = data.data.id;
-        navigate(`/stream?id=${broadcastId}`); // ✅ 🔥 useNavigate 사용
+      if (data.data?.id) {
+        navigate(`/stream?id=${data.data.id}`);
       } else {
         console.error("Broadcast ID not found in response:", data);
       }
@@ -43,13 +55,13 @@ export default function BroadcastSetup() {
 
   return (
     <div style={{ maxWidth: "400px", margin: "20px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "8px", boxShadow: "2px 2px 10px rgba(0,0,0,0.1)" }}>
-      <h2 style={{ textAlign: "center" }}>방송 시작하기</h2>
+      <h2 style={{ textAlign: "center" }}>Start Broadcast</h2>
 
       <div style={{ marginBottom: "10px" }}>
-        <label style={{ fontWeight: "bold" }}>방송 제목</label>
+        <label style={{ fontWeight: "bold" }}>Title</label>
         <input
           type="text"
-          placeholder="방송 제목을 입력하세요"
+          placeholder="Enter broadcast title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           style={{ width: "100%", padding: "8px", marginTop: "5px", border: "1px solid #ccc", borderRadius: "5px" }}
@@ -57,7 +69,7 @@ export default function BroadcastSetup() {
       </div>
 
       <div style={{ marginBottom: "10px" }}>
-        <label style={{ fontWeight: "bold" }}>썸네일 업로드</label>
+        <label style={{ fontWeight: "bold" }}>Upload Thumbnail</label>
         <input
           type="file"
           accept="image/*"
@@ -66,24 +78,24 @@ export default function BroadcastSetup() {
         />
       </div>
 
-      {isUploading && <p style={{ textAlign: "center", color: "red" }}>이미지 업로드 중...</p>}
+      {isUploading && <p style={{ textAlign: "center", color: "red" }}>Uploading image...</p>}
 
-      {thumbNailUrl && (
+      {thumbnailUrl && (
         <div style={{ textAlign: "center", marginBottom: "10px" }}>
-          <img src={thumbNailUrl} alt="썸네일 미리보기" style={{ maxWidth: "100%", height: "auto", borderRadius: "5px", border: "1px solid #ddd" }} />
+          <img src={thumbnailUrl} alt="Thumbnail Preview" style={{ maxWidth: "100%", height: "auto", borderRadius: "5px", border: "1px solid #ddd" }} />
         </div>
       )}
 
       <div style={{ marginBottom: "10px" }}>
-        <label style={{ fontWeight: "bold" }}>카테고리</label>
+        <label style={{ fontWeight: "bold" }}>Category</label>
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(Number(e.target.value))}
           style={{ width: "100%", padding: "8px", marginTop: "5px", border: "1px solid #ccc", borderRadius: "5px" }}
         >
-          <option value="1">게임</option>
-          <option value="2">음악</option>
-          <option value="3">토크쇼</option>
+          <option value="1">Gaming</option>
+          <option value="2">Music</option>
+          <option value="3">Talk Show</option>
         </select>
       </div>
 
@@ -92,7 +104,7 @@ export default function BroadcastSetup() {
         disabled={isUploading}
         style={{ width: "100%", padding: "10px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "5px", cursor: "pointer", fontSize: "16px" }}
       >
-        {isUploading ? "업로드 중..." : "방송 시작"}
+        {isUploading ? "Uploading..." : "Start Broadcast"}
       </button>
     </div>
   );
