@@ -13,10 +13,17 @@ export const uploadImageToS3 = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
 
+  const token = localStorage.getItem("auth");
+  if (!token) {
+    console.error("토큰이 없습니다.");
+    return null;
+  }
+
   try {
     const response = await axios.post(`${API_BASE_URL}/s3/image`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        Authorization: `${token}`
       },
     });
 
@@ -29,22 +36,21 @@ export const uploadImageToS3 = async (file) => {
 };
 
 /**
- * 방송 데이터 전송 (썸네일 업로드 포함)
+ * 
  * @param {string} title - 방송 제목
  * @param {File | null} file - 업로드할 썸네일 파일 (옵션)
  * @param {number} categoryId - 방송 카테고리 ID
  * @returns {Promise<object>} 방송 시작 응답 데이터 반환
  */
-export const sendBroadcastData = async (title, file, categoryId) => {
+export const sendBroadcastData = async (title, url, categoryId) => {
   const token = localStorage.getItem("auth");
   if (!token) throw new Error("No auth token");
 
   let thumbNailUrl = null;
 
-  if (file) {
-    console.log("이미지 업로드 시작...");
-    thumbNailUrl = await uploadImageToS3(file);
-    console.log("업로드된 썸네일 URL:", thumbNailUrl);
+  if (url) {
+    console.log("이미지 업로드 시작");
+    thumbNailUrl = url;
   } else {
     console.log("썸네일 없이 방송을 시작합니다.");
   }
