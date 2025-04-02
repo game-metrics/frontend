@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { fetchProfile, changePassword } from "../../api/profile/ProfileApi.js";
 import "./css/Profile.css";
 
-const Profile = () => {
+const AccountSetting = () => {
   const [nickname, setNickname] = useState("사용자 이름");
   const [email, setEmail] = useState("user@example.com");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -87,4 +87,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default AccountSetting;

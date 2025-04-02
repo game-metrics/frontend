@@ -101,10 +101,10 @@ function Header({ toggleSidebar }) {
               </div>
             </a>
     
-            <a href="/profile">
+            <a href="/Setting">
               <div className="header__option">
                 <span className="header__optionLineOne">Your</span>
-                <span className="header__optionLineTwo">Profile</span>
+                <span className="header__optionLineTwo">Account</span>
               </div>
             </a>
           </>
