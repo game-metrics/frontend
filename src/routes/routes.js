@@ -9,6 +9,7 @@ import StreamerPage from "../pages/broadcast/StreamPage";
 import BroadcastSetup from "../pages/broadcast/StreamSetup";
 import VideoWatchPage from "../pages/video/VideoWatchPage";
 import UploadVideo from "../pages/video/UpLoadVideoPage";
+import SearchResults from "../pages/search/Search"; 
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -22,6 +23,7 @@ const routes = [
   { path: "/profile", element: <Profile /> },
   { path: "/watch", element: <VideoWatchPage /> },
   { path: "/upload-video", element: <UploadVideo /> },
+  { path: "/search",element: <SearchResults/>}
 ];
 
 export default routes;
