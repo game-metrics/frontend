@@ -10,11 +10,6 @@ function CustomSidebar({ isSidebarOpen }) {
   return (
     <Sidebar collapsed={!isSidebarOpen} className="sidebar">
       <Menu>
-        {/* 홈 버튼 - 클릭 시 메인 페이지로 이동 */}
-        <MenuItem className="home-button" onClick={() => navigate("/")}>
-          🏠 Home
-        </MenuItem>
-
         {/* 인증 여부에 따른 메뉴 표시 */}
         {isAuthenticated ? (
           <>
