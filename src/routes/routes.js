@@ -3,6 +3,7 @@ import SignIn from "../pages/Login/SignIn";
 import KakaoCallback from "../pages/Login/OAuth/Kakao";
 import GoogleCallback from "../pages/Login/OAuth/Google";
 import AccountSetting from "../pages/Profile/Profile";
+import UserProfile from "../pages/Profile/UserProfile";
 import SignUp from "../pages/Login/SignUp";
 import Broadcast from "../pages/broadcast/Broadcast";
 import StreamerPage from "../pages/broadcast/StreamPage";
@@ -20,10 +21,11 @@ const routes = [
   { path: "/sign-in/google", element: <GoogleCallback /> },
   { path: "/broadcast-setup", element: <BroadcastSetup /> },
   { path: "/sign-up", element: <SignUp /> },
-  { path: "/Setting", element: <AccountSetting /> },
+  { path: "/setting", element: <AccountSetting /> },
+  { path: "/profile/:username", element: <UserProfile /> },
   { path: "/watch", element: <VideoWatchPage /> },
   { path: "/upload-video", element: <UploadVideo /> },
-  { path: "/search",element: <SearchResults/>}
+  { path: "/search", element: <SearchResults /> }
 ];
 
 export default routes;
