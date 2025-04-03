@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 Hook 추가
 import "./Header.css";
 import logo from "../../images/logo1.png";
 import SearchIcon from "@mui/icons-material/Search";
-import MenuIcon from "@mui/icons-material/Menu"; // 메뉴 아이콘 추가
+import MenuIcon from "@mui/icons-material/Menu";
 
 function Header({ toggleSidebar }) {
   const [logoError, setLogoError] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [nickname, setNickname] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태 추가
+
+  const navigate = useNavigate(); // 페이지 이동 함수
 
   useEffect(() => {
     const token = localStorage.getItem("auth");
@@ -32,6 +36,13 @@ function Header({ toggleSidebar }) {
     window.location.href = "/";
   };
 
+  // 검색 실행 함수
+  const handleSearch = () => {
+    if (searchQuery.trim() !== "") {
+      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
   return (
     <div className="header">
       <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
@@ -47,8 +58,16 @@ function Header({ toggleSidebar }) {
       )}
 
       <div className="header__search">
-        <input className="header__searchInput" type="text" id="search" />
-        <SearchIcon className="header__searchIcon" />
+        <input
+          className="header__searchInput"
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="검색어 입력"
+        />
+        <button className="header__searchButton" onClick={handleSearch}>
+          <SearchIcon />
+        </button>
       </div>
 
       <div className="header__nav">
@@ -82,10 +101,10 @@ function Header({ toggleSidebar }) {
               </div>
             </a>
     
-            <a href="/profile">
+            <a href="/Setting">
               <div className="header__option">
                 <span className="header__optionLineOne">Your</span>
-                <span className="header__optionLineTwo">Profile</span>
+                <span className="header__optionLineTwo">Account</span>
               </div>
             </a>
           </>
