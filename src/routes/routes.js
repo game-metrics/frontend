@@ -2,7 +2,7 @@ import Home from "../pages/Home/Home";
 import SignIn from "../pages/Login/SignIn";
 import KakaoCallback from "../pages/Login/OAuth/Kakao";
 import GoogleCallback from "../pages/Login/OAuth/Google";
-import AccountSetting from "../pages/Profile/Profile";
+import AccountSetting from "../pages/Profile/AccountSetting";
 import UserProfile from "../pages/Profile/UserProfile";
 import SignUp from "../pages/Login/SignUp";
 import Broadcast from "../pages/broadcast/Broadcast";
