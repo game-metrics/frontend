@@ -7,58 +7,39 @@ const UserProfile = () => {
     const { username } = useParams(); // URL 경로에서 username 가져오기
 
     const [profile, setProfile] = useState(null);
-    const [followers, setFollowers] = useState([]);
     const [videos, setVideos] = useState([]);
     const [streams, setStreams] = useState([]);
 
     useEffect(() => {
         if (!username) return;
 
-        fetch(`${API_BASE_URL}/api/profile/${username}`)
+        fetch(`${API_BASE_URL}/users/search?name=${username}`)
             .then(res => res.json())
             .then(data => setProfile(data));
-
-        fetch(`${API_BASE_URL}/api/followers/${username}`)
-            .then(res => res.json())
-            .then(data => setFollowers(data));
-
-        fetch(`${API_BASE_URL}/api/streams/${username}`)
+        
+        fetch(`${API_BASE_URL}/broadcasts/${username}`)
             .then(res => res.json())
             .then(data => setStreams(data));
 
-        fetch(`${API_BASE_URL}/api/videos/${username}`)
+        fetch(`${API_BASE_URL}/videos/profile/${username}`)
             .then(res => res.json())
             .then(data => setVideos(data));
+
+            console.log(profile,videos,streams);
     }, [username]);
 
     return (
         <div>
             {profile && (
                 <div>
-                    <h1>{profile.name} (@{username})</h1>
-                    <p>{profile.bio}</p>
+                    <h1>{profile.email} (@{username})</h1>
+                    <p>{profile.email}</p>
                 </div>
             )}
-            <h2>Followers ({followers.length})</h2>
-            <ul>
-                {followers.map(follower => (
-                    <li key={follower.id}>{follower.name}</li>
-                ))}
-            </ul>
             <h2>Live Streams</h2>
-            <ul>
-                {streams.map(stream => (
-                    <li key={stream.id}>{stream.title}</li>
-                ))}
-            </ul>
+
             <h2>Videos</h2>
-            <ul>
-                {videos.map(video => (
-                    <li key={video.id}>
-                        <button onClick={() => window.open(video.url, "_blank")}>{video.title}</button>
-                    </li>
-                ))}
-            </ul>
+         
         </div>
     );
 };
