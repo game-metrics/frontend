@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import noimage from "../../images/no-image-icon-23485.png";
+import userIcon from "../../images/user.png";
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const UserProfile = () => {
-    const { username } = useParams(); // URL 경로에서 username 가져오기
+    const { username } = useParams();
 
     const [profile, setProfile] = useState(null);
     const [videos, setVideos] = useState([]);
@@ -13,29 +15,41 @@ const UserProfile = () => {
     useEffect(() => {
         if (!username) return;
 
-        fetch(`${API_BASE_URL}/users/${username}`)
-            .then(res => res.json())
-            .then(data => setProfile(data.data));
+        const fetchData = async () => {
+            try {
+                const userRes = await fetch(`${API_BASE_URL}/users/${username}`);
+                const userData = await userRes.json();
+                setProfile(userData.data);
 
-        fetch(`${API_BASE_URL}/broadcasts/${username}`)
-            .then(res => res.json())
-            .then(data => setStreams(data.data.content));
+                const streamRes = await fetch(`${API_BASE_URL}/broadcasts/${username}`);
+                const streamData = await streamRes.json();
+                setStreams(streamData.data.content || []);
 
-        fetch(`${API_BASE_URL}/videos/profile/${username}`)
-            .then(res => res.json())
-            .then(data => setVideos(data.data.content));
+                const videoRes = await fetch(`${API_BASE_URL}/videos/profile/${username}`);
+                const videoData = await videoRes.json();
+                setVideos(videoData.data.content || []);
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
 
-            console.log(profile);
-            console.log(streams);
-            console.log(videos);
+        fetchData();
     }, [username]);
 
     return (
         <div>
             {profile && (
                 <div>
-                    <h1>이메일</h1>
+                    <h1>Email</h1>
                     <p>{profile.email}</p>
+                    <h2>Username</h2>
+                    <p>{profile.nickname}</p>
+                    <h2>Profile Image</h2>
+                    <img
+                        src={profile.profileImage || userIcon}
+                        alt="Profile"
+                        width={150}
+                    />
                 </div>
             )}
 
@@ -45,8 +59,12 @@ const UserProfile = () => {
                     {streams.map((stream, index) => (
                         <li key={index}>
                             <h4>{stream.title}</h4>
-                            {/* <p>{stream.description}</p> */}
-                            {/* Add other stream properties as needed */}
+                            <img
+                                src={stream.thumbNailUrl || noimage}
+                                alt="Stream Thumbnail"
+                                width={120}
+                            />
+                            <p>Category: {stream.categoryId}</p>
                         </li>
                     ))}
                 </ul>
@@ -60,8 +78,12 @@ const UserProfile = () => {
                     {videos.map((video, index) => (
                         <li key={index}>
                             <h4>{video.title}</h4>
-                            {/* <p>{video.description}</p> */}
-                            {/* Add other video properties as needed */}
+                            <img
+                                src={video.thumbNailUrl || noimage}
+                                alt="Video Thumbnail"
+                                width={120}
+                            />
+                            <p>Category: {video.categoryId}</p>
                         </li>
                     ))}
                 </ul>
