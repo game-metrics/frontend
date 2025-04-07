@@ -7,7 +7,7 @@ export const fetchProfile = async () => {
   const token = localStorage.getItem("auth"); // 로컬스토리지에서 'auth' 가져오기
   if (!token) throw new Error("No auth token");
 
-  const response = await axios.get(`${backendBase}/users/profile`, {
+  const response = await axios.get(`${backendBase}/users`, {
     headers: { Authorization: `${token}` },
   });
   return response.data.data;
