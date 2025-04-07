@@ -174,7 +174,7 @@ const StreamerPage = () => {
             📥 Download OBS
           </a>
           <p>
-            <a
+            <p
               target='_blank'
               rel='noopener noreferrer'
               style={{ color: '#28a745' }}
@@ -186,7 +186,7 @@ const StreamerPage = () => {
               3. Service: Choose Custom<br />
               4. Server = Stream URL, Stream Key = Stream Key above<br />
               5. Start Streaming (HLS live starts after ~20 seconds)
-            </a>
+            </p>
           </p>
 
           <button
