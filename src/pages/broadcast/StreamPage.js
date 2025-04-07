@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 
 import './css/Broadcast.css';
+import { red } from '@mui/material/colors';
 
 const StreamerPage = () => {
   const [params] = useSearchParams();
@@ -13,26 +14,26 @@ const StreamerPage = () => {
   const [inputMessage, setInputMessage] = useState('');
   const videoRef = useRef(null);
   const messageEndRef = useRef(null);
-  const [isBroadcastStarted, setIsBroadcastStarted] = useState(false); // ✅ 중복 방지용
+  const [isBroadcastStarted, setIsBroadcastStarted] = useState(false); // ✅ To prevent duplicate calls
 
   const hlsurl = process.env.REACT_APP_HLS;
   const rtmpurl = process.env.REACT_APP_RTMP;
 
   const roomId = params.get('id');
-  const nickname = localStorage.getItem('nickname') || '익명';
+  const nickname = localStorage.getItem('nickname') || 'Anonymous';
   const token = localStorage.getItem('auth');
   const streamUrl = `${hlsurl}/${roomId}.m3u8`;
   const rtmpUrl = rtmpurl;
 
-  // 토큰 없으면 로그인 이동
+  // Redirect to login if no token
   useEffect(() => {
     if (!token) {
-      alert('로그인 해주십쇼');
+      alert('Please log in');
       navigate('/');
     }
   }, [token, navigate]);
 
-  // WebSocket 연결
+  // WebSocket connection
   useEffect(() => {
     if (!roomId || !nickname) return;
 
@@ -44,14 +45,14 @@ const StreamerPage = () => {
     };
   }, [roomId, nickname]);
 
-  // 채팅 자동 스크롤
+  // Auto-scroll chat
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
-  // HLS 스트리밍 설정 및 상태 업데이트
+  // HLS setup and broadcast state update
   useEffect(() => {
     let hls;
     let retryTimeout;
@@ -63,34 +64,33 @@ const StreamerPage = () => {
         hls.attachMedia(videoRef.current);
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          // 방송 시작 PATCH 요청 (한 번만)
-          // HLS 준비 완료 시 방송 시작 PATCH 요청
+          // PATCH startBroadcast only once when HLS is ready
           if (!isBroadcastStarted) {
             startBroadcast(roomId, token)
               .then(() => setIsBroadcastStarted(true))
-              .catch((err) => console.error('방송 시작 실패', err));
+              .catch((err) => console.error('Failed to start broadcast', err));
           }
         });
 
-        // HLS 에러 감지 및 재시도
+        // Handle HLS errors and retry logic
         hls.on(Hls.Events.ERROR, (event, data) => {
-          console.error('🔴 HLS 오류 감지:', data);
+          console.error('🔴 HLS error detected:', data);
 
           if (data.fatal) {
             switch (data.type) {
               case Hls.ErrorTypes.NETWORK_ERROR:
-                console.warn('📡 네트워크 오류! 5초 후 다시 시도합니다.');
+                console.warn('📡 Network error! Retrying in 5 seconds.');
                 retryTimeout = setTimeout(() => {
                   hls.loadSource(streamUrl);
                   hls.attachMedia(videoRef.current);
                 }, 5000);
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
-                console.warn('🎞 미디어 오류 - 복구 시도');
+                console.warn('🎞 Media error - trying to recover');
                 hls.recoverMediaError();
                 break;
               default:
-                console.warn('⚠️ 치명적 오류 - HLS 플레이어 재시작');
+                console.warn('⚠️ Fatal error - restarting HLS player');
                 retryTimeout = setTimeout(() => {
                   hls.destroy();
                   hls = new Hls();
@@ -104,7 +104,7 @@ const StreamerPage = () => {
       } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
         videoRef.current.src = streamUrl;
         videoRef.current.addEventListener('loadedmetadata', () => {
-          // 자동 재생 방지, 사용자가 클릭 후 play() 호출
+          // Prevent autoplay — wait for user interaction to call play()
         });
       }
     }
@@ -115,17 +115,17 @@ const StreamerPage = () => {
     };
   }, [streamUrl, token, roomId, isBroadcastStarted]);
 
-  // 비디오 클릭 시 재생하도록 수정
+  // Play video on click
   const handlePlayClick = () => {
     if (videoRef.current) {
       videoRef.current.play().catch((err) => {
-        console.error('자동 재생 실패:', err);
-        alert('비디오 자동 재생에 실패했습니다. 다시 시도해 주세요.');
+        console.error('Autoplay failed:', err);
+        alert('Failed to auto-play the video. Please try again.');
       });
     }
   };
 
-  // 메시지 전송 함수
+  // Send chat message
   const sendMessage = () => {
     if (ws && inputMessage.trim()) {
       ws.send(
@@ -140,7 +140,7 @@ const StreamerPage = () => {
     }
   };
 
-  // 엔터 키 전송
+  // Handle enter key to send message
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -150,7 +150,7 @@ const StreamerPage = () => {
 
   return (
     <div className='broadcast'>
-      {/* 스트리밍 영역 */}
+      {/* Stream Section */}
       <div className='stream_section'>
         <video
           ref={videoRef}
@@ -158,20 +158,20 @@ const StreamerPage = () => {
           width='640'
           height='360'
           style={{ borderRadius: '8px', border: '1px solid #ddd' }}
-          onClick={handlePlayClick} // 클릭 시 비디오 재생
+          onClick={handlePlayClick} // Play video on click
         />
 
         <div className='obs_info' style={{ marginTop: '20px', textAlign: 'center' }}>
-          <h3>🎥 OBS 방송 설정</h3>
-          <p><strong>📡 방송 URL:</strong> {rtmpUrl}</p>
-          <p><strong>🔑 스트림 키:</strong> {roomId}</p>
+          <h3>🎥 OBS Broadcast Settings</h3>
+          <p><strong>📡 Stream URL:</strong> {rtmpUrl}</p>
+          <p><strong>🔑 Stream Key:</strong> {roomId}</p>
           <a
             href='https://obsproject.com/download'
             target='_blank'
             rel='noopener noreferrer'
             style={{ color: '#007bff', textDecoration: 'underline' }}
           >
-            📥 OBS 다운로드 링크
+            📥 Download OBS
           </a>
           <p>
             <a
@@ -179,13 +179,13 @@ const StreamerPage = () => {
               rel='noopener noreferrer'
               style={{ color: '#28a745' }}
             >
-              📘 OBS 사용법 가이드
+              📘 OBS User Guide
               <br />
-              1. OBS 설치 및 열기<br />
-              2. 파일 - 설정 - 방송 <br />
-              3. 서비스: 사용자 지정 선택<br />
-              4. 서버 칸에 방송 URL, 스트림 키 칸에 스트림 키 입력<br />
-              5. 방송 시작 (20초 정도 후 HLS 생방 시작됨)
+              1. Install and open OBS<br />
+              2. Go to File - Settings - Stream<br />
+              3. Service: Choose Custom<br />
+              4. Server = Stream URL, Stream Key = Stream Key above<br />
+              5. Start Streaming (HLS live starts after ~20 seconds)
             </a>
           </p>
 
@@ -194,14 +194,15 @@ const StreamerPage = () => {
             className='end_broadcast_btn'
             style={{ marginTop: '15px' }}
           >
-            🛑 방송 종료
+            🛑 End Broadcast
           </button>
+          <h2 style={{ color: red }}>Stream Auto Finishes if the connection is closed</h2>
         </div>
       </div>
 
-      {/* 채팅창 */}
+      {/* Chat Box */}
       <div className='chat_container'>
-        <div>💬 채팅</div>
+        <div>💬 Chat</div>
         <div className='chat_messages'>
           {messages.map((msg, idx) => (
             <div key={idx}>
@@ -216,9 +217,9 @@ const StreamerPage = () => {
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder='메시지를 입력하세요...'
+            placeholder='Type a message...'
           />
-          <button onClick={sendMessage}>전송</button>
+          <button onClick={sendMessage}>Send</button>
         </div>
       </div>
     </div>
