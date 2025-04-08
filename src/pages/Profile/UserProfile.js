@@ -66,6 +66,7 @@ const UserProfile = () => {
                                 />
                                 <h4>{stream.title}</h4>
                                 <p>Category: {stream.categoryId}</p>
+                                <p>Created At: {stream.createdAt}</p>
                             </div>
                         ))}
                     </div>
@@ -86,8 +87,7 @@ const UserProfile = () => {
                                     alt="Video Thumbnail"
                                 />
                                 <h4>{video.title}</h4>
-                                <p>Category: {video.categoryId}</p>
-                                <p>Category: {video.createdAt}</p>
+                                <p>Created At: {video.createdAt}</p>
                             </div>
                         ))}
                     </div>
