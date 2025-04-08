@@ -107,7 +107,7 @@ function Header({ toggleSidebar }) {
               </div>
               <div className="header__dropdown">
                 <a href={`/profile/${nickname}`} className="header__dropdownItem">Profile</a>
-                <a href="/settings" className="header__dropdownItem">Settings</a>
+                <a href="/setting" className="header__dropdownItem">Settings</a>
               </div>
             </div>
           </>

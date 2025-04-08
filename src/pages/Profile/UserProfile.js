@@ -55,7 +55,7 @@ const UserProfile = () => {
 
             {/* Streams */}
             <div className="section">
-                <h2 className="section-title">Passed Streams</h2>
+                <h2 className="section-title">Past Streams</h2>
                 {streams.length > 0 ? (
                     <div className="card-list">
                         {streams.map((stream, index) => (
@@ -70,7 +70,7 @@ const UserProfile = () => {
                         ))}
                     </div>
                 ) : (
-                    <p>No live streams found.</p>
+                    <p>No streams are found.</p>
                 )}
             </div>
 
