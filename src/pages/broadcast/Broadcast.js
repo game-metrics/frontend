@@ -1,5 +1,5 @@
 import { initWebSocket,confirmBroadcast } from '../../api/broadcast/BroadcastAPI';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 
@@ -20,6 +20,7 @@ const Broadcast = () => {
   const roomId = params.get('id');
   const nickname = localStorage.getItem('nickname') || '익명';
   const streamUrl = `${hlsurl}/${roomId}.m3u8`;
+  const navi = useNavigate();
 
   // 🔹 WebSocket 연결 설정
   useEffect(() => {
@@ -53,11 +54,12 @@ const Broadcast = () => {
           ...prev,
           { sender: '시스템', message: '⚠️ 방송 송출이 종료되었습니다.' }
         ]);
-
+        
         // 🔸 방송 종료 확인 신호 전송
         await confirmBroadcast(roomId);
-
-        return;
+        alert("Broadcast has been finished");
+        navi("/");
+        return ;
       }
 
       if (videoRef.current) {
@@ -76,7 +78,7 @@ const Broadcast = () => {
 
           hls.on(Hls.Events.MANIFEST_PARSED, () => {
             videoRef.current.play().catch(err => {
-              console.error('자동 재생 실패:', err);
+              console.error(`자동 재생 실패:${retryCount} out of 4`, err);
             });
           });
 
@@ -96,7 +98,7 @@ const Broadcast = () => {
     return () => {
       if (hls) hls.destroy();
     };
-  }, [streamUrl]);
+  }, [streamUrl,retryCount, roomId, navi]);
 
   // 🔹 메시지 전송 함수
   const sendMessage = () => {
@@ -126,7 +128,7 @@ const Broadcast = () => {
         <video ref={videoRef} controls autoPlay width="100%" height="100%" />
         {streamFailed && (
           <div className="stream_error">
-            ❌ 방송 송출이 종료되었습니다.
+            ❌ Stream connection has ended.
           </div>
         )}
       </div>

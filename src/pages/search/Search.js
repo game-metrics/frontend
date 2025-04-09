@@ -66,7 +66,10 @@ const SearchResults = () => {
                 {broadcasts.map((broadcast) => (
                   <li key={broadcast.id} className="result-item">
                     <img className="thumbnail" src={broadcast.thumbNailUrl} alt={broadcast.title} />
-                    <span className="title">{broadcast.title}</span> (카테고리: {broadcast.categoryId})
+                    <div className="broadcast-info">
+                      <p className="title">Title: {broadcast.title}</p>
+                      <p className="created-at">Created at: {broadcast.createdAt}</p>
+                    </div>
                   </li>
                 ))}
               </ul>

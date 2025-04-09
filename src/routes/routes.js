@@ -23,7 +23,7 @@ const routes = [
   { path: "/sign-up", element: <SignUp /> },
   { path: "/setting", element: <AccountSetting /> },
   { path: "/profile/:username", element: <UserProfile /> },
-  { path: "/watch", element: <VideoWatchPage /> },
+  { path: "/watch/:videoId", element: <VideoWatchPage /> },
   { path: "/upload-video", element: <UploadVideo /> },
   { path: "/search", element: <SearchResults /> }
 ];

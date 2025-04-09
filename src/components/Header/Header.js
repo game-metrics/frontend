@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 Hook 추가
+import { useNavigate } from "react-router-dom";
 import "./Header.css";
 import logo from "../../images/logo1.png";
 import SearchIcon from "@mui/icons-material/Search";
@@ -9,9 +9,9 @@ function Header({ toggleSidebar }) {
   const [logoError, setLogoError] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [nickname, setNickname] = useState("");
-  const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태 추가
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const navigate = useNavigate(); // 페이지 이동 함수
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("auth");
@@ -36,7 +36,6 @@ function Header({ toggleSidebar }) {
     window.location.href = "/";
   };
 
-  // 검색 실행 함수
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
       navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
@@ -93,20 +92,24 @@ function Header({ toggleSidebar }) {
                 <span className="header__optionLineTwo">BroadCast</span>
               </div>
             </a>
-            
+
             <a href="/upload-video">
               <div className="header__option">
                 <span className="header__optionLineOne">Upload</span>
                 <span className="header__optionLineTwo">Video</span>
               </div>
             </a>
-    
-            <a href="/setting">
+
+            <div className="header__optionDropdownWrapper">
               <div className="header__option">
                 <span className="header__optionLineOne">Your</span>
                 <span className="header__optionLineTwo">Account</span>
               </div>
-            </a>
+              <div className="header__dropdown">
+                <a href={`/profile/${nickname}`} className="header__dropdownItem">Profile</a>
+                <a href="/setting" className="header__dropdownItem">Settings</a>
+              </div>
+            </div>
           </>
         )}
       </div>
