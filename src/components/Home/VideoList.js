@@ -31,7 +31,7 @@ function VideoList() {
           videos.map((video, index) => (
             <div key={index} className="video-item">
               {/* Link로 감싸기 */}
-              <Link to={`/watch?videoid=${video.id}`} className="video-link">
+              <Link to={`/watch/${video.id}`} className="video-link">
                 <img
                   src={video.thumbNailUrl || noThumbnail}
                   alt={video.title}
@@ -39,6 +39,7 @@ function VideoList() {
                 />
                 <h3>{video.title}</h3>
                 <p>{video.description}</p>
+                <p>{video.createdAt}</p>
               </Link>
             </div>
           ))
