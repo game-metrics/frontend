@@ -7,24 +7,31 @@ function CustomSidebar({ isSidebarOpen }) {
   const navigate = useNavigate();
   const isAuthenticated = !!localStorage.getItem("auth");
   const backendBase = process.env.REACT_APP_BACKEND_URL;
+  const token = localStorage.getItem("auth");
 
   const [followedUsers, setFollowedUsers] = useState([]);
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetch(`${backendBase}/follows?page=0`)
+      fetch(`${backendBase}/follows?page=0&size=5`, {
+        method: "GET",
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch followed users.");
+          console.log(res);
           return res.json();
         })
         .then((data) => {
-          setFollowedUsers(data || []);
+          setFollowedUsers(data.data?.content || []);
         })
         .catch((err) => {
           console.error("Error fetching followed users:", err);
         });
     }
-  }, [isAuthenticated, backendBase]);
+  }, [isAuthenticated, backendBase, token]);
 
   return (
     <Sidebar collapsed={!isSidebarOpen} className="sidebar">
@@ -35,7 +42,7 @@ function CustomSidebar({ isSidebarOpen }) {
             {followedUsers.length > 0 ? (
               followedUsers.map((user, index) => (
                 <MenuItem key={user.id || index}>
-                  {user.name || user.username || `User ${index + 1}`}
+                  {user.nickname || user.username || `User ${index + 1}`}
                 </MenuItem>
               ))
             ) : (

@@ -79,3 +79,19 @@
     font-size: 0.875rem;
     color: #555;
 }
+
+.follow-button {
+    padding: 8px 16px;
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.follow-button:hover {
+    background-color: #5b21b6;
+}
