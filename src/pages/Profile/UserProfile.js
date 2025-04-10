@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // ✅ useNavigate 추가
 import noimage from "../../images/no-image-icon-23485.png";
 import userIcon from "../../images/user.png";
 import "./css/UserProfile.css";
@@ -8,6 +8,7 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const UserProfile = () => {
     const { username } = useParams();
+    const navigate = useNavigate(); // ✅ useNavigate 사용
 
     const [profile, setProfile] = useState(null);
     const [videos, setVideos] = useState([]);
@@ -28,6 +29,7 @@ const UserProfile = () => {
 
                 const videoRes = await fetch(`${API_BASE_URL}/videos/profile/${username}`);
                 const videoData = await videoRes.json();
+                console.log(videoData.data.content);
                 setVideos(videoData.data.content || []);
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -81,7 +83,12 @@ const UserProfile = () => {
                 {videos.length > 0 ? (
                     <div className="card-list">
                         {videos.map((video, index) => (
-                            <div key={index} className="card">
+                            <div
+                                key={index}
+                                className="card"
+                                onClick={() => navigate(`/watch/${video.id}`)} 
+                                style={{ cursor: "pointer" }} 
+                            >
                                 <img
                                     src={video.thumbNailUrl || noimage}
                                     alt="Video Thumbnail"
