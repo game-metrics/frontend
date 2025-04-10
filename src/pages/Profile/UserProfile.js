@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // ✅ useNavigate 추가
+import { useParams, useNavigate } from "react-router-dom";
 import noimage from "../../images/no-image-icon-23485.png";
 import userIcon from "../../images/user.png";
 import "./css/UserProfile.css";
@@ -8,11 +8,12 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const UserProfile = () => {
     const { username } = useParams();
-    const navigate = useNavigate(); // ✅ useNavigate 사용
+    const navigate = useNavigate();
 
     const [profile, setProfile] = useState(null);
     const [videos, setVideos] = useState([]);
     const [streams, setStreams] = useState([]);
+    const token = localStorage.getItem("auth");
 
     useEffect(() => {
         if (!username) return;
@@ -29,7 +30,6 @@ const UserProfile = () => {
 
                 const videoRes = await fetch(`${API_BASE_URL}/videos/profile/${username}`);
                 const videoData = await videoRes.json();
-                console.log(videoData.data.content);
                 setVideos(videoData.data.content || []);
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -38,6 +38,26 @@ const UserProfile = () => {
 
         fetchData();
     }, [username]);
+
+    const handleFollow = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/follows?streamerName=${username}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `${token}`, // 필요 시 인증 추가
+                },
+            });
+
+            if (response.ok) {
+                alert("You followed this user!");
+            } else {
+                alert("Failed to follow.");
+            }
+        } catch (error) {
+            console.error("Error following user:", error);
+        }
+    };
 
     return (
         <div className="user-profile">
@@ -51,6 +71,9 @@ const UserProfile = () => {
                     <div className="profile-info">
                         <h2>{profile.nickname}</h2>
                         <p>{profile.email}</p>
+                        <button className="follow-button" onClick={handleFollow}>
+                            Follow
+                        </button>
                     </div>
                 </div>
             )}
@@ -86,8 +109,8 @@ const UserProfile = () => {
                             <div
                                 key={index}
                                 className="card"
-                                onClick={() => navigate(`/watch/${video.id}`)} 
-                                style={{ cursor: "pointer" }} 
+                                onClick={() => navigate(`/watch/${video.id}`)}
+                                style={{ cursor: "pointer" }}
                             >
                                 <img
                                     src={video.thumbNailUrl || noimage}
