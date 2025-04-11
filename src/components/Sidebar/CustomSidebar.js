@@ -12,7 +12,13 @@ function CustomSidebar({ isSidebarOpen }) {
   const [followedUsers, setFollowedUsers] = useState([]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) return;
+
+    const cachedFollows = localStorage.getItem("followedUsers");
+
+    if (cachedFollows) {
+      setFollowedUsers(JSON.parse(cachedFollows));
+    } else {
       fetch(`${backendBase}/follows?page=0&size=5`, {
         method: "GET",
         headers: {
@@ -21,11 +27,12 @@ function CustomSidebar({ isSidebarOpen }) {
       })
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch followed users.");
-          console.log(res);
           return res.json();
         })
         .then((data) => {
-          setFollowedUsers(data.data?.content || []);
+          const users = data.data?.content || [];
+          setFollowedUsers(users);
+          localStorage.setItem("followedUsers", JSON.stringify(users));
         })
         .catch((err) => {
           console.error("Error fetching followed users:", err);
@@ -38,11 +45,14 @@ function CustomSidebar({ isSidebarOpen }) {
       <Menu>
         {isAuthenticated ? (
           <>
-            <h1 className="follow-text">Following Users</h1>
+            <h1 className="follow-text">Follow</h1>
             {followedUsers.length > 0 ? (
               followedUsers.map((user, index) => (
-                <MenuItem key={user.id || index}>
-                  {user.nickname || user.username || `User ${index + 1}`}
+                <MenuItem
+                  key={user.id || index}
+                  onClick={() => navigate(`/profile/${user.streamerName}`)}
+                >
+                  {user.streamerName || `User ${index + 1}`}
                 </MenuItem>
               ))
             ) : (

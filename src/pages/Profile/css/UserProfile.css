@@ -95,3 +95,8 @@
 .follow-button:hover {
     background-color: #5b21b6;
 }
+  
+  .follow-button.unfollow {
+    background-color: #c5c5c5;
+  }
+  
