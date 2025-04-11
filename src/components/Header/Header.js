@@ -57,12 +57,17 @@ function Header({ toggleSidebar }) {
       )}
 
       <div className="header__search">
-        <input
+          <input
           className="header__searchInput"
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="검색어 입력"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
         <button className="header__searchButton" onClick={handleSearch}>
           <SearchIcon />
