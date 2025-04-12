@@ -6,7 +6,7 @@ import noThumbnail from '../../images/nothumnail.png';
 
 function VideoList() {
   const [videos, setVideos] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 4;
 
@@ -19,6 +19,7 @@ function VideoList() {
       const { content, totalPages } = await fetchVideos(page, pageSize);
       setVideos(content);
       setTotalPages(totalPages);
+      console.log(totalPages)
     } catch (error) {
       console.error('Error loading videos:', error);
     }
@@ -46,18 +47,6 @@ function VideoList() {
         ) : (
           <p>No videos available.</p>
         )}
-      </div>
-
-      <div className="pagination">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i)}
-            className={i === currentPage ? 'active' : ''}
-          >
-            {i + 1}
-          </button>
-        ))}
       </div>
     </div>
   );

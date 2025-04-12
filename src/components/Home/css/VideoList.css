@@ -33,3 +33,18 @@
     color: white;
   }
   
+  .pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    background-color: #eee;
+    border-radius: 4px;
+  }
+  
+  .pagination button.active {
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+  }
+  

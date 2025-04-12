@@ -5,13 +5,13 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const API_BASE_WS = process.env.REACT_APP_BACKEND_WS;
 
 // Fetch broadcasts
-export const fetchBroadcasts = async () => {
+export const fetchBroadcasts = async (page, size = 4) => {
   try {
-    const response = await axios.get(API_BASE_URL+'/broadcasts?page=0&size=4');
-    return response.data.data.content; 
+    const response = await axios.get(`${API_BASE_URL}/broadcasts?page=${page}&size=${size}`);
+    return response.data.data; // 여기서 content, totalPages 등이 포함됨
   } catch (error) {
     console.error("Error fetching broadcasts:", error);
-    throw error; 
+    throw error;
   }
 };
 
