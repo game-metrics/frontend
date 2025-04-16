@@ -6,7 +6,7 @@ import noThumbnail from '../../images/nothumnail.png';
 
 function VideoList() {
   const [videos, setVideos] = useState([]);
-  const [currentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 4;
 
@@ -19,38 +19,78 @@ function VideoList() {
       const { content, totalPages } = await fetchVideos(page, pageSize);
       setVideos(content);
       setTotalPages(totalPages);
-      console.log(totalPages)
     } catch (error) {
       console.error('Error loading videos:', error);
     }
   };
 
+  const handlePageClick = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const renderPagination = () => {
+    const pages = [];
+    for (let i = 0; i < totalPages; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => handlePageClick(i)}
+          className={`page-button ${currentPage === i ? 'active' : ''}`}
+        >
+          {i + 1}
+        </button>
+      );
+    }
+    return pages;
+  };
+
   return (
-    
-    <><h1>Video List</h1>
-    <div className="video-list-container">
-      <div className="video-grid">
-        {videos.length > 0 ? (
-          videos.map((video, index) => (
-            <div key={index} className="video-item">
-              {/* Link로 감싸기 */}
-              <Link to={`/watch/${video.id}`} className="video-link">
-                <img
-                  src={video.thumbNailUrl || noThumbnail}
-                  alt={video.title}
-                  style={{ width: '300px', height: '200px' }}
-                />
-                <h3>{video.title}</h3>
-                <p>{video.description}</p>
-                <p>{video.createdAt}</p>
-              </Link>
-            </div>
-          ))
-        ) : (
-          <p>No videos available.</p>
+    <>
+      <h1>Video List</h1>
+      <div className="video-list-container">
+        <div className="video-grid">
+          {videos.length > 0 ? (
+            videos.map((video, index) => (
+              <div key={index} className="video-item">
+                {/* Link로 감싸기 */}
+                <Link to={`/watch/${video.id}`} className="video-link">
+                  <img
+                    src={video.thumbNailUrl || noThumbnail}
+                    alt={video.title}
+                    style={{ width: '300px', height: '200px' }}
+                  />
+                  <h3>{video.title}</h3>
+                  <p>{video.description}</p>
+                  <p>{video.createdAt}</p>
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p>No videos available.</p>
+          )}
+        </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button
+              onClick={() => handlePageClick(currentPage - 1)}
+              disabled={currentPage === 0}
+            >
+              Prev
+            </button>
+            {renderPagination()}
+            <button
+              onClick={() => handlePageClick(currentPage + 1)}
+              disabled={currentPage === totalPages - 1}
+            >
+              Next
+            </button>
+          </div>
         )}
       </div>
-    </div>
     </>
   );
 }

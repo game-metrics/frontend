@@ -1,7 +1,7 @@
 import React from 'react';
 import StreamList from '../../components/Home/StreamList.js';
 import VideoList from '../../components/Home/VideoList.js';
-import GoogleAd from '../../components/Home/GoogleAd.js';
+import UserList from '../../components/Home/UserList.js';
 import "./css/Home.css";
 
 function Home() {
@@ -10,7 +10,7 @@ function Home() {
     
       <StreamList />
       <VideoList />
-
+      <UserList/>
     </div>
   );
 }

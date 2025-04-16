@@ -15,8 +15,9 @@ const VideoWatchPage = () => {
       try {
         const res = await fetch(`${backendBase}/videos/${videoId}`);
         const data = await res.json();
-        setVideoData(data.data);
+        setVideoData(data.data);  
         setVideoUrl(data.data.videoUrl);
+        console.log(data.data);
       } catch (err) {
         console.error("비디오 정보를 불러오는 중 오류:", err);
       }
@@ -37,7 +38,7 @@ const VideoWatchPage = () => {
               </video>
             </div>
           ) : (
-            <p className="text-center text-gray-600">비디오를 불러오는 중입니다...</p>
+            <p className="text-center text-gray-600">Loading Video...</p>
           )}
 
           {videoData && (
@@ -47,10 +48,10 @@ const VideoWatchPage = () => {
             </div>
           )}
         </div>
-
+          {/* 이사이에 유저의  */}
         <div className="comment-section">
-          <h3>댓글</h3>
-          <p className="text-sm text-gray-500">댓글 기능은 준비 중입니다.</p>
+          <h3>Comments</h3>
+          <p className="text-sm text-gray-500">Comments Entity and Function is on Development</p>
         </div>
       </div>
 
