@@ -32,7 +32,7 @@ const AccountSetting = () => {
 
         const data = await fetchProfile(token);
         setEmail(data.email);
-        if (data.profileImage) setPreviewUrl(data.profileImage);
+        if (data.profileImageUrl) setPreviewUrl(data.profileImageUrl);
       } catch (error) {
         console.error("Error fetching user profile:", error);
       }

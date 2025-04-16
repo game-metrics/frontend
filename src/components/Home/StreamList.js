@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchBroadcasts, fetchCategories } from '../../api/broadcast/BroadcastAPI';
+import NavbarStream from './NavbarStream';
 import { Link } from 'react-router-dom';
 import noThumbnail from '../../images/nothumnail.png';
 
@@ -7,7 +8,8 @@ function StreamList() {
   const [data, setData] = useState([]);
   const [listData, setListData] = useState([]);
   const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
+  const [totalPages, setTotalPages] = useState(1);
+  const [liveStream, setLiveStream] = useState(null); // ⭐ 라이브 방송 저장
 
   const PAGE_SIZE = 4;
 
@@ -16,7 +18,12 @@ function StreamList() {
       try {
         const broadcasts = await fetchBroadcasts(page, PAGE_SIZE);
         setData(broadcasts.content);
-        setTotalPages(broadcasts.totalPages); // 응답에서 totalPages도 받도록 수정
+        setTotalPages(broadcasts.totalPages);
+
+        // ⭐ 실시간 방송 중 하나 찾아서 저장
+        const live = broadcasts.content[0];
+        setLiveStream(live || null);
+
       } catch (error) {
         console.error(error);
       }
@@ -40,11 +47,11 @@ function StreamList() {
 
     fetchCategory();
     fetchBroadcast();
-  }, [page]); // 페이지가 바뀔 때마다 호출
+  }, [page]);
 
   const getCategoryNameById = (id) => {
     const category = listData.data?.find((cat) => cat.id === id);
-    return category ? category.category : "카테고리 알 수 없음";
+    return category ? category.category : "Unkown category";
   };
 
   const handlePageChange = (newPage) => {
@@ -55,6 +62,8 @@ function StreamList() {
 
   return (
     <>
+      <NavbarStream liveStream={liveStream} /> {/* live stream transfer */}
+      <h1>Stream List</h1>
       <div className="data-list">
         {data.length > 0 ? (
           data.map((item, index) => (
@@ -75,7 +84,6 @@ function StreamList() {
         )}
       </div>
 
-      {/* 페이지네이션 버튼 */}
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button onClick={() => handlePageChange(page - 1)} disabled={page === 0}>
           이전

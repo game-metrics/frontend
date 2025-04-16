@@ -34,6 +34,8 @@ const UserProfile = () => {
         const videoRes = await fetch(`${API_BASE_URL}/videos/profile/${username}`);
         const videoData = await videoRes.json();
         setVideos(videoData.data.content || []);
+        
+        // console.log(profile,streams,videos);
 
         if (token) {
           const followRes = await fetch(`${API_BASE_URL}/follows?page=0&size=100`, {
@@ -143,7 +145,7 @@ const UserProfile = () => {
       {profile && (
         <div className="profile-card">
           <img
-            src={profile.profileImage || userIcon}
+            src={profile.profileImageUrl || userIcon}
             alt="Profile"
             className="profile-img"
           />

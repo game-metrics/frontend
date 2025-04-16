@@ -1,43 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { fetchBroadcasts } from '../../api/broadcast/BroadcastAPI';
+import React, { useEffect, useRef } from 'react';
+import Hls from 'hls.js';
 
-function NavbarStream() {
-  const [liveStream, setLiveStream] = useState(null);
+function NavbarStream({ liveStream }) {
+  const videoRef = useRef();
 
   useEffect(() => {
-    const getLiveStream = async () => {
-      try {
-        const broadcasts = await fetchBroadcasts();
-        const live = broadcasts.find((stream) => stream.isLive);
-        
-        if (live) {
-          setLiveStream(live);
-        } else {
-          setLiveStream(null);
-        }
-      } catch (error) {
-        console.error("Failed to fetch live stream:", error);
-      }
-    };
+    if (liveStream && videoRef.current) {
+      const video = videoRef.current;
+      const hls = new Hls();
+      const videoSrc = `${process.env.REACT_APP_HLS}/${liveStream.id}.m3u8`;
 
-    getLiveStream();
-  }, []);
+      if (Hls.isSupported()) {
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // Safari처럼 기본 HLS 지원 브라우저
+        video.src = videoSrc;
+      }
+
+      return () => {
+        hls.destroy();
+      };
+    }
+  }, [liveStream]);
+
+  if (!liveStream) {
+    return <div className="navbar-stream-nostream">There is no Live Stream Currently</div>;
+  }
 
   return (
     <div className="navbar-stream">
-      {liveStream ? (
-        <div className="live-video">
-          <h3>현재 생방송 중!</h3>
-          <video
-            src={liveStream.videoUrl}
-            controls
-            autoPlay
-            style={{ width: '100%', height: 'auto' }}
-          />
-        </div>
-      ) : (
-        <p>현재 생방 중인 채널이 없습니다</p>
-      )}
+      <div className="live-video">
+        <h3>🎥 Live Stream </h3>
+        <video
+          ref={videoRef}
+          controls
+          autoPlay
+          muted
+          style={{ width: '40%', height: 'auto' }}
+        />
+      </div>
     </div>
   );
 }
