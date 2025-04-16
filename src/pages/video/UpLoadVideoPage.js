@@ -119,7 +119,7 @@ const UploadVideo = () => {
     <div className="upload-video-container">
       <h2 className="upload-video-title">Upload Video</h2>
       <form onSubmit={handleSubmit} className="upload-video-form">
-        <div>
+        <div className="upload-video-field">
           <label className="upload-video-label">Title</label>
           <input
             type="text"
@@ -131,7 +131,7 @@ const UploadVideo = () => {
           />
         </div>
 
-        <div>
+        <div className="upload-video-field">
           <label className="upload-video-label">Video File</label>
           <input
             type="file"
@@ -145,7 +145,11 @@ const UploadVideo = () => {
         {thumbnailPreviewUrl && (
           <div className="upload-video-thumbnail-preview">
             <label className="upload-video-label">Thumbnail Preview</label>
-            <img src={thumbnailPreviewUrl} alt="Thumbnail Preview" className="upload-video-thumbnail-img" />
+            <img
+              src={thumbnailPreviewUrl}
+              alt="Thumbnail Preview"
+              className="upload-video-thumbnail-img"
+            />
           </div>
         )}
 
