@@ -26,6 +26,8 @@ function VideoList() {
   };
 
   return (
+    
+    <><h1>Video List</h1>
     <div className="video-list-container">
       <div className="video-grid">
         {videos.length > 0 ? (
@@ -49,6 +51,7 @@ function VideoList() {
         )}
       </div>
     </div>
+    </>
   );
 }
 
