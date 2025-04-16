@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './css/UserList.css';
+import userIcon from "../../images/user.png";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -7,27 +9,32 @@ const UserList = () => {
   const backendBase = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
-    axios.get(backendBase+'/users/page?page=0&size=5')
+    axios.get(`${backendBase}/users/page?page=0&size=5`)
       .then(response => {
         const userData = response.data?.data?.content || [];
         setUsers(userData);
-        console.log(users);
       })
       .catch(error => {
         console.error('Error fetching users:', error);
       });
-  });
+  }, [backendBase]);
+
+  // 프로필 이미지가 없을 경우 기본 이미지 사용
+  const getProfileImage = (url) => {
+    return url || userIcon;
+  };
 
   return (
-    <div className="w-full overflow-x-auto whitespace-nowrap p-4 bg-white shadow rounded-xl">
-      <div className="flex space-x-6">
+    <div className="user-list-container">
+      <div className="user-list-scroll">
         {users.map((user, index) => (
-          <div key={index} className="flex flex-col items-center min-w-[80px]">
+          <div key={index} className="user-item">
             <img
-              src={user.profileImage}
+              src={getProfileImage(user.profileImageUrl)}
               alt={user.nickname}
-              className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+              className="user-avatar"
             />
+            {user.nickname && <span className="user-name">{user.nickname}</span>}
           </div>
         ))}
       </div>
