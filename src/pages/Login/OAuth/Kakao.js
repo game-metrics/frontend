@@ -17,7 +17,7 @@ const KakaoCallback = () => {
           localStorage.setItem("auth", data.token); // 토큰을 localStorage에 저장
           localStorage.setItem("nickname", data.nickname); // nickname을 localStorage에 저장
           navigate('/sign-in');
-          window.location.reload();
+          window.location.href = "/";
         })
         .catch((error) => {
           console.error('로그인 중 오류 발생:', error);

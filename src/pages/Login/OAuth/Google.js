@@ -18,13 +18,13 @@ const GoogleCallback = () => {
           localStorage.setItem("nickname", response.data.data.nickname);
           localStorage.setItem("auth", response.data.data.token); // 토큰도 localStorage에 저장
           navigate("/sign-in");
-          window.location.reload();
+          window.location.href = "/";
         })
         .catch((error) => {
           console.error("로그인 중 오류 발생:", error);
           alert("로그인 실패!");
           navigate("/sign-in");
-          window.location.reload();
+          window.location.href = "/";
         });
     } else {
       console.error("Authorization Code not found");
