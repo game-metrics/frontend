@@ -31,15 +31,10 @@ function StreamList() {
 
     const fetchCategory = async () => {
       try {
-        const cachedData = localStorage.getItem("listData");
-
-        if (cachedData) {
-          setListData(JSON.parse(cachedData));
-        } else {
           const categories = await fetchCategories();
           setListData(categories);
           localStorage.setItem("listData", JSON.stringify(categories));
-        }
+
       } catch (error) {
         console.error("Failed to fetch category data:", error);
       }
