@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./Header.css";
 import logo from "../../images/logo1.png";
 import SearchIcon from "@mui/icons-material/Search";
@@ -34,7 +34,7 @@ function Header({ toggleSidebar }) {
     setIsAuthenticated(false);
     setNickname("");
     alert("로그아웃되었습니다.");
-    window.location.href = "/";
+    navigate("/");
   };
 
   const handleSearch = () => {
@@ -50,15 +50,20 @@ function Header({ toggleSidebar }) {
       </button>
 
       {!logoError ? (
-        <a href="/">
-          <img className="header__logo" src={logo} alt="GameMetric 로고" onError={handleImageError} />
-        </a>
+        <Link to="/">
+          <img
+            className="header__logo"
+            src={logo}
+            alt="GameMetric 로고"
+            onError={handleImageError}
+          />
+        </Link>
       ) : (
         <span className="header__logoError">이미지가 없습니다</span>
       )}
 
       <div className="header__search">
-          <input
+        <input
           className="header__searchInput"
           type="text"
           value={searchQuery}
@@ -77,14 +82,18 @@ function Header({ toggleSidebar }) {
 
       <div className="header__nav">
         {!isAuthenticated ? (
-          <a href="/sign-in">
+          <Link to="/sign-in">
             <div className="header__option">
               <span className="header__optionLineOne">Hello</span>
               <span className="header__optionLineTwo">Sign In</span>
             </div>
-          </a>
+          </Link>
         ) : (
-          <div className="header__option" onClick={handleLogout} style={{ cursor: "pointer" }}>
+          <div
+            className="header__option"
+            onClick={handleLogout}
+            style={{ cursor: "pointer" }}
+          >
             <span className="header__optionLineOne">{nickname || "Hello"}</span>
             <span className="header__optionLineTwo">Log Out</span>
           </div>
@@ -92,19 +101,19 @@ function Header({ toggleSidebar }) {
 
         {isAuthenticated && (
           <>
-            <a href="/broadcast-setup">
+            <Link to="/broadcast-setup">
               <div className="header__option">
                 <span className="header__optionLineOne">Start</span>
                 <span className="header__optionLineTwo">BroadCast</span>
               </div>
-            </a>
+            </Link>
 
-            <a href="/upload-video">
+            <Link to="/upload-video">
               <div className="header__option">
                 <span className="header__optionLineOne">Upload</span>
                 <span className="header__optionLineTwo">Video</span>
               </div>
-            </a>
+            </Link>
 
             <div className="header__optionDropdownWrapper">
               <div className="header__option">
@@ -112,8 +121,15 @@ function Header({ toggleSidebar }) {
                 <span className="header__optionLineTwo">Account</span>
               </div>
               <div className="header__dropdown">
-                <a href={`/profile/${nickname}`} className="header__dropdownItem">Profile</a>
-                <a href="/setting" className="header__dropdownItem">Settings</a>
+                <Link
+                  to={`/profile/${nickname}`}
+                  className="header__dropdownItem"
+                >
+                  Profile
+                </Link>
+                <Link to="/setting" className="header__dropdownItem">
+                  Settings
+                </Link>
               </div>
             </div>
           </>

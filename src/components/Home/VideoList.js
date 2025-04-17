@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchVideos } from '../../api/video/videoAPI';
 import './css/VideoList.css';
 import noThumbnail from '../../images/nothumnail.png';
+import { Link } from 'react-router-dom'; // ✅ Link import
 
 function VideoList() {
   const [videos, setVideos] = useState([]);
@@ -52,9 +53,9 @@ function VideoList() {
         <div className="video-grid">
           {videos.length > 0 ? (
             videos.map((video, index) => (
-              <a
+              <Link // ✅ Link 대신 사용
                 key={index}
-                href={`/watch/${video.id}`}
+                to={`/watch/${video.id}`}
                 className="video-item"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
@@ -66,7 +67,7 @@ function VideoList() {
                 <h3>{video.title}</h3>
                 <p>{video.description}</p>
                 <p>{video.createdAt}</p>
-              </a>
+              </Link>
             ))
           ) : (
             <p>No videos available.</p>
