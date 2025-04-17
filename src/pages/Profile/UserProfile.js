@@ -14,11 +14,26 @@ const UserProfile = () => {
   const [videos, setVideos] = useState([]);
   const [streams, setStreams] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const token = localStorage.getItem("auth");
   const currentNickname = localStorage.getItem("nickname");
 
   useEffect(() => {
+    // Load and transform categories from localStorage
+    try {
+      const storedData = JSON.parse(localStorage.getItem("listData"));
+      if (storedData?.data?.length) {
+        const formattedCategories = storedData.data.map(item => ({
+          id: item.id,
+          name: item.category
+        }));
+        setCategories(formattedCategories);
+      }
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    }
+
     if (!username) return;
 
     const fetchData = async () => {
@@ -35,8 +50,6 @@ const UserProfile = () => {
         const videoData = await videoRes.json();
         setVideos(videoData.data.content || []);
         
-        // console.log(profile,streams,videos);
-
         if (token) {
           const followRes = await fetch(`${API_BASE_URL}/follows?page=0&size=100`, {
             headers: {
@@ -47,8 +60,7 @@ const UserProfile = () => {
           const followed = followData.data?.content || [];
 
           const isFollowingUser = followed.some(
-            (user) =>
-              user.streamerName === username || user.username === username
+            (user) => user.streamerName === username || user.username === username
           );
           setIsFollowing(isFollowingUser);
         }
@@ -60,6 +72,12 @@ const UserProfile = () => {
     fetchData();
   }, [username, token]);
 
+  const getCategoryName = (categoryId) => {
+    if (!categoryId) return "No category";
+    const category = categories.find(cat => cat.id === categoryId);
+    return category?.name || `Category ${categoryId}`;
+  };
+
   const handleFollowToggle = async () => {
     if (!token) {
       alert("You need to be logged in to follow/unfollow.");
@@ -67,48 +85,20 @@ const UserProfile = () => {
     }
 
     try {
-      const storageKey = "followedUsers";
-      const storedFollows = JSON.parse(localStorage.getItem(storageKey)) || [];
+      const response = await fetch(`${API_BASE_URL}/follows?streamerName=${username}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
 
-      if (isFollowing) {
-        const response = await fetch(`${API_BASE_URL}/follows?streamerName=${username}`, {
-          method: "POST",
-          headers: {
-            Authorization: `${token}`,
-          },
-        });
-
-        if (response.ok) {
-          setIsFollowing(false);
-          alert("Unfollowed successfully.");
-          const updatedFollows = storedFollows.filter(
-            (user) =>
-              user.streamerName !== username &&
-              user.username !== username
-          );
-          localStorage.setItem(storageKey, JSON.stringify(updatedFollows));
-          navigate(0);
-        } else {
-          alert("Failed to unfollow.");
-        }
+      if (response.ok) {
+        setIsFollowing(!isFollowing);
+        alert(`${isFollowing ? "Unfollowed" : "Followed"} successfully`);
+        navigate(0); // Refresh the page
       } else {
-        const response = await fetch(`${API_BASE_URL}/follows?streamerName=${username}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        });
-
-        if (response.ok) {
-          setIsFollowing(true);
-          alert("Followed successfully.");
-          const newUser = { username, streamerName: username };
-          const updatedFollows = [...storedFollows, newUser];
-          localStorage.setItem(storageKey, JSON.stringify(updatedFollows));
-        } else {
-          alert("Failed to follow.");
-        }
+        alert(`Failed to ${isFollowing ? "unfollow" : "follow"}`);
       }
     } catch (error) {
       console.error("Error toggling follow:", error);
@@ -116,7 +106,7 @@ const UserProfile = () => {
   };
 
   const handleDeleteVideo = async (videoId, e) => {
-    e.stopPropagation(); // Prevent navigate on card click
+    e.stopPropagation();
 
     if (!window.confirm("Are you sure you want to delete this video?")) return;
 
@@ -130,7 +120,7 @@ const UserProfile = () => {
 
       if (res.ok) {
         alert("Video deleted successfully.");
-        setVideos((prev) => prev.filter((v) => v.id !== videoId));
+        setVideos(prev => prev.filter(v => v.id !== videoId));
       } else {
         alert("Failed to delete video.");
       }
@@ -174,13 +164,13 @@ const UserProfile = () => {
                   alt="Stream Thumbnail"
                 />
                 <h4>{stream.title}</h4>
-                <p>Category: {stream.categoryId}</p>
-                <p>Created At: {stream.createdAt}</p>
+                <p>Category: {getCategoryName(stream.categoryId)}</p>
+                <p>Created At: {new Date(stream.createdAt).toLocaleString()}</p>
               </div>
             ))}
           </div>
         ) : (
-          <p>No streams are found.</p>
+          <p>No streams found.</p>
         )}
       </div>
 
@@ -201,9 +191,8 @@ const UserProfile = () => {
                   alt="Video Thumbnail"
                 />
                 <h4>{video.title}</h4>
-                <p>Created At: {video.createdAt}</p>
+                <p>Created At: {new Date(video.createdAt).toLocaleString()}</p>
 
-                {/* 삭제 버튼 조건: 로그인 유저 nickname === 프로필 닉네임 */}
                 {profile?.nickname === currentNickname && (
                   <button
                     className="delete-button"

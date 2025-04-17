@@ -30,6 +30,7 @@ function Header({ toggleSidebar }) {
   const handleLogout = () => {
     localStorage.removeItem("auth");
     localStorage.removeItem("nickname");
+    localStorage.removeItem("followedUsers");
     setIsAuthenticated(false);
     setNickname("");
     alert("로그아웃되었습니다.");
