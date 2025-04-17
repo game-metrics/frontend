@@ -10,6 +10,7 @@ function Home() {
     
       <StreamList />
       <VideoList />
+      <h1>Users</h1>
       <UserList/>
     </div>
   );

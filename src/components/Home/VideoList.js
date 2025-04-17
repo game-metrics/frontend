@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { fetchVideos } from '../../api/video/videoAPI';
-import { Link } from 'react-router-dom';
 import './css/VideoList.css';
 import noThumbnail from '../../images/nothumnail.png';
 
@@ -53,19 +52,21 @@ function VideoList() {
         <div className="video-grid">
           {videos.length > 0 ? (
             videos.map((video, index) => (
-              <div key={index} className="video-item">
-                {/* Link로 감싸기 */}
-                <Link to={`/watch/${video.id}`} className="video-link">
-                  <img
-                    src={video.thumbNailUrl || noThumbnail}
-                    alt={video.title}
-                    style={{ width: '300px', height: '200px' }}
-                  />
-                  <h3>{video.title}</h3>
-                  <p>{video.description}</p>
-                  <p>{video.createdAt}</p>
-                </Link>
-              </div>
+              <a
+                key={index}
+                href={`/watch/${video.id}`}
+                className="video-item"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <img
+                  src={video.thumbNailUrl || noThumbnail}
+                  alt={video.title}
+                  style={{ width: '300px', height: '200px' }}
+                />
+                <h3>{video.title}</h3>
+                <p>{video.description}</p>
+                <p>{video.createdAt}</p>
+              </a>
             ))
           ) : (
             <p>No videos available.</p>
@@ -91,6 +92,7 @@ function VideoList() {
           </div>
         )}
       </div>
+      <br />
     </>
   );
 }

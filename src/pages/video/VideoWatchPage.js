@@ -56,7 +56,6 @@ const VideoWatchPage = () => {
       </div>
 
       <div className="sidebar">
-        <h2>추천 영상</h2>
           <VideoList/>
       </div>
     </div>
