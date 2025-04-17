@@ -1,6 +1,7 @@
-import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import { useState } from "react";
+import "./App.css";
 
 // 컴포넌트
 import Header from "./components/Header/Header";
@@ -16,6 +17,7 @@ function App() {
   };
 
   return (
+    <AuthProvider>
     <Router>
       <div className="App">
         <Header toggleSidebar={toggleSidebar} />
@@ -29,6 +31,7 @@ function App() {
         </div>
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 

@@ -71,7 +71,7 @@ export default function SignIn() {
       localStorage.setItem("auth", response.token);
       localStorage.setItem("nickname", response.nickname);
 
-      window.location.reload(); // 새로고침
+      window.location.href = "/";
     } catch (error) {
       console.error("Error:", error);
       alert("Sign-in failed. Please try again.");
