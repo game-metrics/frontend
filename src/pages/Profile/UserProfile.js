@@ -79,11 +79,11 @@ const UserProfile = () => {
       alert("You need to be logged in to follow/unfollow.");
       return;
     }
-
+  
     try {
       const storageKey = "followedUsers";
       const storedFollows = JSON.parse(localStorage.getItem(storageKey)) || [];
-
+  
       if (isFollowing) {
         const response = await fetch(`${API_BASE_URL}/follows?streamerName=${username}`, {
           method: "POST",
@@ -91,7 +91,7 @@ const UserProfile = () => {
             Authorization: `${token}`,
           },
         });
-
+  
         if (response.ok) {
           setIsFollowing(false);
           alert("Unfollowed successfully.");
@@ -101,7 +101,9 @@ const UserProfile = () => {
               user.username !== username
           );
           localStorage.setItem(storageKey, JSON.stringify(updatedFollows));
-          navigate(0);
+  
+          // ✅ Notify sidebar to update
+          window.dispatchEvent(new Event("followUpdated"));
         } else {
           alert("Failed to unfollow.");
         }
@@ -113,13 +115,16 @@ const UserProfile = () => {
             Authorization: `${token}`,
           },
         });
-
+  
         if (response.ok) {
           setIsFollowing(true);
           alert("Followed successfully.");
           const newUser = { username, streamerName: username };
           const updatedFollows = [...storedFollows, newUser];
           localStorage.setItem(storageKey, JSON.stringify(updatedFollows));
+  
+          // ✅ Notify sidebar to update
+          window.dispatchEvent(new Event("followUpdated"));
         } else {
           alert("Failed to follow.");
         }
