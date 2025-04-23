@@ -6,7 +6,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
-import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -72,8 +71,7 @@ export default function SignIn() {
       localStorage.setItem("auth", response.token);
       localStorage.setItem("nickname", response.nickname);
 
-
-      window.location.reload(); // 새로고침
+      window.location.href = "/";
     } catch (error) {
       console.error("Error:", error);
       alert("Sign-in failed. Please try again.");
@@ -179,15 +177,14 @@ export default function SignIn() {
             <Button type="submit" fullWidth variant="contained">
               Sign in
             </Button>
-            <Link
-              component="button"
-              type="button"
+            <Button
+              fullWidth
+              variant="text"
               onClick={handleClickOpen}
-              variant="body2"
               sx={{ alignSelf: "center" }}
             >
               Forgot your password?
-            </Link>
+            </Button>
           </Box>
           <Divider>or</Divider>
           <Box className="signin-buttons">
@@ -209,9 +206,13 @@ export default function SignIn() {
             </Button>
             <Typography className="signin-footer">
               Don&apos;t have an account?{" "}
-              <Link href="/sign-up" variant="body2" sx={{ alignSelf: "center" }}>
+              <Button
+                variant="text"
+                onClick={() => navigate("/sign-up")}
+                sx={{ alignSelf: "center", padding: 0 }}
+              >
                 Sign up
-              </Link>
+              </Button>
             </Typography>
           </Box>
         </MuiCard>

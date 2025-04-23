@@ -14,30 +14,42 @@ function CustomSidebar({ isSidebarOpen }) {
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const cachedFollows = localStorage.getItem("followedUsers");
+    const fetchFollowedUsers = () => {
+      const cachedFollows = localStorage.getItem("followedUsers");
 
-    if (cachedFollows) {
-      setFollowedUsers(JSON.parse(cachedFollows));
-    } else {
-      fetch(`${backendBase}/follows?page=0&size=5`, {
-        method: "GET",
-        headers: {
-          Authorization: `${token}`,
-        },
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch followed users.");
-          return res.json();
+      if (cachedFollows) {
+        setFollowedUsers(JSON.parse(cachedFollows));
+      } else {
+        fetch(`${backendBase}/follows?page=0&size=5`, {
+          method: "GET",
+          headers: {
+            Authorization: `${token}`,
+          },
         })
-        .then((data) => {
-          const users = data.data?.content || [];
-          setFollowedUsers(users);
-          localStorage.setItem("followedUsers", JSON.stringify(users));
-        })
-        .catch((err) => {
-          console.error("Error fetching followed users:", err);
-        });
-    }
+          .then((res) => {
+            if (!res.ok) throw new Error("Failed to fetch followed users.");
+            return res.json();
+          })
+          .then((data) => {
+            const users = data.data?.content || [];
+            setFollowedUsers(users);
+            localStorage.setItem("followedUsers", JSON.stringify(users));
+          })
+          .catch((err) => {
+            console.error("Error fetching followed users:", err);
+          });
+      }
+    };
+
+    fetchFollowedUsers();
+
+    // Listen for follow updates from other components
+    window.addEventListener("followUpdated", fetchFollowedUsers);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("followUpdated", fetchFollowedUsers);
+    };
   }, [isAuthenticated, backendBase, token]);
 
   return (
@@ -61,7 +73,10 @@ function CustomSidebar({ isSidebarOpen }) {
           </>
         ) : (
           <MenuItem>
-            <button className="login-button" onClick={() => navigate("/sign-in")}>
+            <button
+              className="login-button"
+              onClick={() => navigate("/sign-in")}
+            >
               Log in
             </button>
           </MenuItem>

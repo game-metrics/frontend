@@ -1,44 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import "./Header.css";
 import logo from "../../images/logo1.png";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 
 function Header({ toggleSidebar }) {
-  const [logoError, setLogoError] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [nickname, setNickname] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-
+  const { isAuthenticated, nickname, logout } = useContext(AuthContext);
+  const [searchQuery, setSearchQuery] = React.useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("auth");
-    const userNickname = localStorage.getItem("nickname");
-
-    setIsAuthenticated(Boolean(token));
-    if (userNickname) {
-      setNickname(userNickname);
-    }
-  }, []);
-
-  const handleImageError = () => {
-    setLogoError(true);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("auth");
-    localStorage.removeItem("nickname");
-    localStorage.removeItem("followedUsers");
-    setIsAuthenticated(false);
-    setNickname("");
-    alert("로그아웃되었습니다.");
-    navigate("/");
-  };
-
   const handleSearch = () => {
-    if (searchQuery.trim() !== "") {
+    if (searchQuery.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }
   };
@@ -49,18 +23,9 @@ function Header({ toggleSidebar }) {
         <MenuIcon />
       </button>
 
-      {!logoError ? (
-        <Link to="/">
-          <img
-            className="header__logo"
-            src={logo}
-            alt="GameMetric 로고"
-            onError={handleImageError}
-          />
-        </Link>
-      ) : (
-        <span className="header__logoError">이미지가 없습니다</span>
-      )}
+      <Link to="/">
+        <img className="header__logo" src={logo} alt="GameMetric 로고" />
+      </Link>
 
       <div className="header__search">
         <input
@@ -68,12 +33,8 @@ function Header({ toggleSidebar }) {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           placeholder="검색어 입력"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearch();
-            }
-          }}
         />
         <button className="header__searchButton" onClick={handleSearch}>
           <SearchIcon />
@@ -89,18 +50,12 @@ function Header({ toggleSidebar }) {
             </div>
           </Link>
         ) : (
-          <div
-            className="header__option"
-            onClick={handleLogout}
-            style={{ cursor: "pointer" }}
-          >
-            <span className="header__optionLineOne">{nickname || "Hello"}</span>
-            <span className="header__optionLineTwo">Log Out</span>
-          </div>
-        )}
-
-        {isAuthenticated && (
           <>
+            <div className="header__option" onClick={logout}>
+              <span className="header__optionLineOne">{nickname}</span>
+              <span className="header__optionLineTwo">Log Out</span>
+            </div>
+
             <Link to="/broadcast-setup">
               <div className="header__option">
                 <span className="header__optionLineOne">Start</span>
@@ -121,10 +76,7 @@ function Header({ toggleSidebar }) {
                 <span className="header__optionLineTwo">Account</span>
               </div>
               <div className="header__dropdown">
-                <Link
-                  to={`/profile/${nickname}`}
-                  className="header__dropdownItem"
-                >
+                <Link to={`/profile/${nickname}`} className="header__dropdownItem">
                   Profile
                 </Link>
                 <Link to="/setting" className="header__dropdownItem">
