@@ -78,7 +78,7 @@ function StreamList() {
           <p>No broadcasts available</p>
         )}
       </div>
-
+{/* need to fix
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button onClick={() => handlePageChange(page - 1)} disabled={page === 0}>
           이전
@@ -89,7 +89,7 @@ function StreamList() {
         <button onClick={() => handlePageChange(page + 1)} disabled={page + 1 >= totalPages}>
           다음
         </button>
-      </div>
+      </div> */}
     </>
   );
 }
