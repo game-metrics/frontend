@@ -1,9 +1,10 @@
 .home{
-    size: 80%;
+    /* size: 80%; */
     margin: 2% 3% 3% 3%;
     width: 95%;
+    height: 100%;
     /* 임시 / temporary */
-    background-color: rgb(235, 235, 235);
+    background-color: rgb(247, 247, 247);
 }
 
 .data-list{
