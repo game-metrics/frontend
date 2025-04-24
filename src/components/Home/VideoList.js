@@ -54,7 +54,7 @@ function VideoList() {
         <div className="video-grid">
           {videos.length > 0 ? (
             videos.map((video, index) => (
-              <Link // ✅ Link 대신 사용
+              <Link 
                 key={index}
                 to={`/watch/${video.id}`}
                 className="video-item"
