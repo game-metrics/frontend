@@ -25,7 +25,30 @@ function NavbarStream({ liveStream }) {
   }, [liveStream]);
 
   if (!liveStream) {
-    return <div className="navbar-stream-nostream">There is no Live Stream Currently</div>;
+    return  <>
+    <h3
+     style={{ 
+      margin: "auto",
+      textAlign: 'center', 
+      padding: '10px', 
+      borderRadius: '8px' 
+    }}
+    >🎥 Live Stream </h3>
+    <div 
+    style={{ 
+      margin: "auto",
+      width: '40%', 
+      height: '40%', 
+      color: 'white', 
+      textAlign: 'center', 
+      padding: '10px', 
+      backgroundColor: 'black', 
+      borderRadius: '8px' 
+    }}
+  >
+    There is no Live Stream Currently
+  </div>
+  </>
   }
 
   return (

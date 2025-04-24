@@ -20,7 +20,7 @@ function StreamList() {
         setData(broadcasts.content);
         setTotalPages(broadcasts.totalPages);
 
-        // ⭐ 실시간 방송 중 하나 찾아서 저장
+        // 실시간 방송 중 하나 찾아서 저장
         const live = broadcasts.content[0];
         setLiveStream(live || null);
 
