@@ -6,19 +6,24 @@ import { useNavigate } from 'react-router-dom';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
-  const navigate = useNavigate(); // 페이지 이동을 위한 훅
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
   const backendBase = process.env.REACT_APP_BACKEND_URL;
+  const PAGE_SIZE = 7;
 
   useEffect(() => {
-    axios.get(`${backendBase}/users/page?page=0&size=6`)
+    axios.get(`${backendBase}/users/page?page=${page}&size=${PAGE_SIZE}`)
       .then(response => {
         const userData = response.data?.data?.content || [];
         setUsers(userData);
+        // console.log(response.data.data.page.totalPages);
+        setTotalPages(response.data?.data?.page?.totalPages || 1);
       })
       .catch(error => {
         console.error('Error fetching users:', error);
       });
-  }, [backendBase]);
+  }, [page, backendBase]);
 
   const getProfileImage = (url) => {
     return url || userIcon;
@@ -26,6 +31,12 @@ const UserList = () => {
 
   const handleUserClick = (nickname) => {
     navigate(`/profile/${nickname}`);
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setPage(newPage);
+    }
   };
 
   return (
@@ -36,7 +47,7 @@ const UserList = () => {
             key={index}
             className="user-item"
             onClick={() => handleUserClick(user.nickname)}
-            style={{ cursor: 'pointer' }} // 클릭 가능 표시
+            style={{ cursor: 'pointer' }}
           >
             <img
               src={getProfileImage(user.profileImageUrl)}
@@ -47,6 +58,29 @@ const UserList = () => {
           </div>
         ))}
       </div>
+
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i}
+              onClick={() => handlePageChange(i)}
+              style={{
+                margin: '0 5px',
+                padding: '6px 10px',
+                borderRadius: '4px',
+                backgroundColor: i === page ? '#007bff' : '#e0e0e0',
+                color: i === page ? '#fff' : '#000',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

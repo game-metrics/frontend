@@ -17,6 +17,7 @@ function VideoList() {
   const loadVideos = async (page) => {
     try {
       const { content, totalPages } = await fetchVideos(page, pageSize);
+
       setVideos(content);
       setTotalPages(totalPages);
     } catch (error) {

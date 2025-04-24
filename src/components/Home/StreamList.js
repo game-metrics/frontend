@@ -11,14 +11,14 @@ function StreamList() {
   const [totalPages, setTotalPages] = useState(1);
   const [liveStream, setLiveStream] = useState(null); // ⭐ 라이브 방송 저장
 
-  const PAGE_SIZE = 4;
+  const PAGE_SIZE = 5;
 
   useEffect(() => {
     const fetchBroadcast = async () => {
       try {
         const broadcasts = await fetchBroadcasts(page, PAGE_SIZE);
         setData(broadcasts.content);
-        setTotalPages(broadcasts.totalPages);
+        setTotalPages(broadcasts.page?.totalPages || 1);
 
         // 실시간 방송 중 하나 찾아서 저장
         const live = broadcasts.content[0];
@@ -59,6 +59,7 @@ function StreamList() {
     <>
       <NavbarStream liveStream={liveStream} /> {/* live stream transfer */}
       <h1>Stream List</h1>
+  
       <div className="data-list">
         {data.length > 0 ? (
           data.map((item, index) => (
@@ -78,18 +79,29 @@ function StreamList() {
           <p>No broadcasts available</p>
         )}
       </div>
-{/* need to fix
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <button onClick={() => handlePageChange(page - 1)} disabled={page === 0}>
-          이전
-        </button>
-        <span style={{ margin: '0 10px' }}>
-          Page {page + 1} of {totalPages}
-        </span>
-        <button onClick={() => handlePageChange(page + 1)} disabled={page + 1 >= totalPages}>
-          다음
-        </button>
-      </div> */}
+  
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i}
+              onClick={() => handlePageChange(i)}
+              style={{
+                margin: '0 5px',
+                padding: '8px 12px',
+                backgroundColor: i === page ? '#007bff' : '#f0f0f0',
+                color: i === page ? '#fff' : '#000',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </>
   );
 }
