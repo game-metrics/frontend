@@ -109,7 +109,7 @@ export default function SignUp() {
       navigate('/sign-in'); // 성공시 로그인 페이지로
     } catch (error) {
       console.error('Error:', error);
-      alert('Sign-up failed. Please try again.');
+      alert('Username || Email is already in use. Please try again.');
     }
   };
 
