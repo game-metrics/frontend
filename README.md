@@ -18,9 +18,6 @@ Key features include:
 🗂️ Category management
 
 💬 Real-time chat via WebSocket
-# ERD
-![ERD](./.github/erd.png)
-
 # Architecture Diagram
 ![Architecture](./.github/arch.png)
 
