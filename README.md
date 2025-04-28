@@ -1,70 +1,108 @@
-# Getting Started with Create React App
+# Notion : [Gametric Notion](https://www.notion.so/Gametric-1c74f54d931480fbb042e9d97eb177ef)
+Gametric is an all-in-one web platform that empowers creators to stream live via RTMP, upload and share videos, and interact with audiences in real time.
+It combines live broadcasting, VOD features, a social follow system, and WebSocket-based chat into a single, streamlined experience.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This documentation provides everything developers need to integrate with Gametric's services via RESTful APIs and WebSocket protocols.
 
-## Available Scripts
+Key features include:
+🔐 User management
 
-In the project directory, you can run:
+📡 RTMP-based live broadcasting
 
-### `npm start`
+🎬 Video upload, editing, and search
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+🤝 Follow system for social interaction
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+☁️ Media upload to AWS S3 (images & videos)
 
-### `npm test`
+🗂️ Category management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+💬 Real-time chat via WebSocket
+# ERD
+![ERD](./.github/erd.png)
 
-### `npm run build`
+# Architecture Diagram
+![Architecture](./.github/arch.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# 📘 API Documentation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This documentation covers all available endpoints for user management, live broadcasting, video uploading, following system, media upload to S3, category management, and real-time chat via WebSockets.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 👤 User API
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+| Status    | Feature                 | Method | Endpoint                              | Auth Required | Request Body                                                                 |
+|-----------|-------------------------|--------|----------------------------------------|---------------|------------------------------------------------------------------------------|
+| Complete  | Sign Up                 | POST   | `/users`                               | No            | `{ "email": "emai1@email.com", "password": "Qqwer1233!" }`                  |
+| Complete  | Login                   | GET    | `/login`                               | No            | `{ "email": "emai1@email.com", "password": "Qqwer1233!" }`                  |
+| Complete  | Update Password         | PATCH  | `/users`                               | Yes           | `{ "currentPassword": "currentpassword", "newPassword": "new password" }`   |
+| Complete  | Update Profile Image    | PATCH  | `/users/profile/image`                 | Yes           | `{ "profileImageUrl": "{url from s3}" }`                                    |
+| Complete  | Get Current User Detail | GET    | `/users`                               | Yes           | –                                                                            |
+| Complete  | Get Other User Detail   | GET    | `/users/{username}`                    | No            | –                                                                            |
+| Complete  | Search Users (Paged)    | GET    | `/users/search?name={nickname}&page=0&size=5` | No      | –                                                                            |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🎥 Broadcast API
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+| Status    | Feature                   | Method | Endpoint                                     | Auth Required | Request Body                                                                 |
+|-----------|---------------------------|--------|----------------------------------------------|---------------|------------------------------------------------------------------------------|
+| Complete  | Create Broadcast          | POST   | `/broadcasts`                                | Yes           | `{ "title": "example title", "thumbNailUrl": "https://example.com/image.jpg", "categoryId": 12345 }` |
+| Complete  | Get Broadcast Page        | GET    | `/broadcasts`                                | No            | –                                                                            |
+| Complete  | Search Broadcasts         | GET    | `/broadcasts/search?={title}`                | No            | –                                                                            |
+| Complete  | Update Title/Thumbnail    | PUT    | `/broadcasts/{broadcastId}`                  | Yes           | `{ "title": "title1edit", "thumbNailUrl": "title1.com edit" }`              |
+| Complete  | Stop Broadcast (Manual)   | PATCH  | `/broadcasts/off`                            | Yes           | `{ "broadcastId": 11 }`                                                      |
+| 시작 전    | Restart Broadcast         | PATCH  | `/broadcasts/on`                             | Yes           | `{ "broadcastId": 11 }`                                                      |
+| Complete  | Get/Search User Broadcasts| GET    | `/broadcasts/profile/{username}?page=0&size=2` | No         | –                                                                            |
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🎬 Video API
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+| Status    | Feature                          | Method | Endpoint                                                   | Auth Required | Request Body                                |
+|-----------|----------------------------------|--------|-------------------------------------------------------------|---------------|---------------------------------------------|
+| Complete  | Create Video                     | POST   | `/videos`                                                   | Yes           | `{ "content": "첫번째 댓글입니다." }`         |
+| Complete  | Edit Video Title/Thumbnail       | PATCH  | `/videos/{videoId}`                                         | Yes           | –                                           |
+| Complete  | Delete Video                     | DELETE | `/videos/{videoId}`                                         | Yes           | –                                           |
+| Complete  | Search Videos                    | GET    | `/videos/search?videoTitle={title}&page=0&size=2`           | No            | –                                           |
+| Complete  | Get My Videos                    | GET    | `/videos/profile`                                           | Yes           | –                                           |
+| Complete  | Get Another User's Videos        | GET    | `/videos/profile/{userName}`                                | No            | –                                           |
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 👥 Follow API
 
-### Analyzing the Bundle Size
+| Status    | Feature                | Method | Endpoint         | Auth Required | Request Body                                                                 |
+|-----------|------------------------|--------|------------------|---------------|------------------------------------------------------------------------------|
+| Complete  | Update Follow Status   | POST   | `/follows`       | Yes           | `{ "userid": {from token}, "streamerName": "exampleStreamer" }`            |
+| Complete  | Get My Follow Page     | GET    | `/follows`       | Yes           | –                                                                            |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## 🗂️ S3 (Media Upload) API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+| Status    | Feature           | Method | Endpoint         | Auth Required | Request Body |
+|-----------|-------------------|--------|------------------|---------------|--------------|
+| Complete  | Upload Image      | POST   | `/s3/image`      | Yes           | –            |
+| Complete  | Upload Video      | POST   | `/s3/video`      | Yes           | –            |
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 📂 Category API
 
-### Deployment
+| Status    | Feature            | Method | Endpoint              | Auth Required | Request Body                                  |
+|-----------|--------------------|--------|------------------------|---------------|-----------------------------------------------|
+| Complete  | Add New Category   | POST   | `/category`            | Yes           | `{ "catagoryName": "league of legends" }`     |
+| Complete  | Get Category List  | GET    | `/category`            | Yes           | –                                             |
+| Complete  | Delete Category    | DELETE | `/category/{categoryId}` | Yes        | –                                             |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 💬 WebSocket (Chat) API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Status    | Feature     | Protocol  | Endpoint | Auth Required | Message Format                                                                 |
+|-----------|-------------|-----------|----------|---------------|--------------------------------------------------------------------------------|
+| Complete  | Chat Socket | WebSocket | `/ws`    | Yes (Bearer)  | ```json<br>{<br>  "type": "MessageType",<br>  "roomId": 12345,<br>  "sender": "exampleSender",<br>  "message": "Hello, world!"<br>}``` |
+
+---
